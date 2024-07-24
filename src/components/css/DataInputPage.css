@@ -1,0 +1,128 @@
+/* src/components/css/DataInputPage.css */
+
+/* Estilos para o container */
+.container {
+    padding: 2rem;
+    background-color: #fff;
+    margin: 2rem auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    width: 90%;
+}
+
+/* Estilos para o título */
+.container h2 {
+    text-align: center;
+    color: #333;
+    margin: 0 0 25px;
+}
+
+/* Estilos para o textarea */
+textarea {
+    width: 99%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    font-family: Arial, sans-serif;
+}
+
+.details-checkbox {
+    accent-color: green; /* Cor de acentuação específica */
+}
+
+/* Estilos para os checkboxes de hidro */
+.hydro-checkbox {
+    accent-color: blue; /* Cor de acentuação específica */
+}
+
+/* Estilos para os checkboxes de resumo de chuva */
+.rain-checkbox {
+    accent-color: yellow; /* Cor de acentuação específica */
+}
+
+label {
+    display: flex;
+    align-items: center;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+input[type="checkbox"],
+input[type="date"] {
+    margin-right: 0.5rem;
+}
+
+/* Estilos para os botões */
+button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para a visualização dos dados */
+.data-view {
+    margin-top: 2rem;
+}
+
+/* Estilos para os sub-filtros */
+.sub-filters {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+}
+
+.sub-filters label {
+    margin-bottom: 0.3rem;
+}
+
+/* Estilos para filtros de intervalo de datas */
+.date-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.date-filters label {
+    flex: 1;
+    width: max-content;
+}
+
+.date-input {
+    margin: 0 5px;
+}
+
+.filters {
+    margin: 0 0 20px;
+}
+
+/* Estilos para dispor os filtros de detalhes em 4 colunas */
+.details-filters {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin: 10px 15px 20px;
+}
+
+.label-checkbox {
+    font-family: monospace;
+    font-size: 1.2rem;
+}
+
+.filtro-n1 {
+    font-size: 1.2rem;
+    font-family: monospace;
+}

@@ -1,0 +1,88 @@
+/* src/components/css/DataView.css */
+
+.stations-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Alinha os cartões ao início */
+    margin-top: 30px;
+}
+
+.station-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    width: 300px;
+    max-width: 100%;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    flex: 1 1 calc(33% - 40px); /* Ajusta a largura para permitir múltiplos cartões lado a lado */
+    box-sizing: border-box;
+}
+
+.station-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: auto;
+}
+
+.station-card h4 {
+    margin: 10px 0 -5px;
+    font-size: 1.25em;
+    color: #333;
+}
+
+.station-card h5 {
+    text-align: left;
+    margin-bottom: auto;
+    font-family: monospace;
+    font-size: 1.1rem;
+}
+
+.station-card table {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+    font-size: 0.85rem;
+}
+
+.station-card th, .station-card td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.station-card th {
+    background-color: black;
+    font-weight: bold;
+}
+
+.station-card td {
+    background-color: #fff;
+}
+
+button {
+    margin-top: 10px;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.station-card .view-more-button {
+    width: 100%;
+    font-size: 1.2em; /* Fonte maior */
+    font-family: monospace; /* Fonte monospace */
+}   

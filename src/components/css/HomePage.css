@@ -1,0 +1,111 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Estilos para o contêiner principal */
+.home-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Estilos para o cabeçalho */
+.home-header {
+    background-color: #003366;
+    color: white;
+    padding: 40px 20px;
+}
+
+.home-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.home-header p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+/* Estilos para a HomePage */
+.home-banner {
+    /* background: url('../assets/portal_snirh1.png') no-repeat center center; */
+    background-size: cover;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.home-content {
+    background-color: #fff;
+    padding: 2rem;
+    margin: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.home-content img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.home-section {
+    margin-bottom: 2rem;
+}
+
+.home-section h3 {
+    color: #333;
+}
+
+.home-section p {
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.home-section a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #007BFF;
+    text-decoration: none;
+    border: 1px solid #007BFF;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.home-section a:hover {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+/* Estilos para o rodapé */
+.home-footer {
+    background-color: #003366;
+    color: white;
+    padding: 20px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.footer-socials a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-socials a:hover {
+    text-decoration: underline;
+}
