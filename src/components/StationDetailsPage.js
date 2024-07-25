@@ -1,13 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { formatNumber } from '../utils/utils'; // Importa os utilitários
 
-// Função para formatar os números
-const formatNumber = (number) => {
-    if (number % 1 === 0) {
-        return number.toLocaleString('pt-BR'); // Formata números inteiros
-    }
-    return number.toLocaleString('pt-BR', { minimumFractionDigits: 1 }); // Formata números decimais
-};
 
 // Componente para exibir os detalhes da estação
 const StationDetailsPage = () => {
