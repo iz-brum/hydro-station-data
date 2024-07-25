@@ -3,228 +3,256 @@
 import React, { useState, useEffect } from 'react';
 import { fetchStationDetails, fetchHydro24h, fetchRainSummary } from '../api/apiService';
 import DataView from './DataView';
-import './css/DataInputPage.css';  // Importa o CSS específico para DataInputPage
-import Popup from './Popup';  // Importa o componente de pop-up
+import './css/DataInputPage.css';
+import Popup from './Popup';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import Papa from 'papaparse';
-import { detailLabels, mapPeriodLabel, safeToString } from '../utils/utils'; // Importa o mapeamento e a função de mapeamento
-import { useLoading } from '../context/LoadingContext'; // Importa o contexto de carregamento
-
-
+import { detailLabels, mapPeriodLabel, safeToString } from '../utils/utils';
+import { useLoading } from '../context/LoadingContext';
+import PreviewModal from './PreviewModal';
 
 const DataInputPage = () => {
   const { setLoading } = useLoading();
-  const [codes, setCodes] = useState(localStorage.getItem('codes') || '');  // Estado para armazenar os códigos das estações
-  const [data, setData] = useState(JSON.parse(localStorage.getItem('data')) || null);  // Estado para armazenar os dados das estações
-  const [selectedData, setSelectedData] = useState(JSON.parse(localStorage.getItem('selectedData')) || {  // Estado para armazenar as opções de dados selecionadas
+  const [codes, setCodes] = useState(localStorage.getItem('codes') || '');
+  const [data, setData] = useState(JSON.parse(localStorage.getItem('data')) || null);
+  const [selectedData, setSelectedData] = useState(JSON.parse(localStorage.getItem('selectedData')) || {
     detalhes: true,
     hidro_24h: true,
     chuva_ult: true,
   });
+  const [selectedDetails, setSelectedDetails] = useState(JSON.parse(localStorage.getItem('selectedDetails')) || {});
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewData, setPreviewData] = useState([]);
+  const [selectedRainSummary, setSelectedRainSummary] = useState(JSON.parse(localStorage.getItem('selectedRainSummary')) || {});
 
-  const [selectedDetails, setSelectedDetails] = useState(JSON.parse(localStorage.getItem('selectedDetails')) || {
-    // codigo: true,
-    nome: true,
-    bacia: true,
-    subbacia: true,
-    rio: true,
-    estado: true,
-    municipio: true,
-    responsavel: true,
-    operadora: true,
-    latitude: true,
-    longitude: true,
-    areadrenagem: true,
-    tipoestacao: true,
-    operando: true,
-    telemetrica: true,
-    climatologica: true,
-    pluviometro: true,
-    registradorchuva: true,
-    escala: true,
-    registradornivel: true,
-    descargaliquida: true,
-    sedimentos: true,
-    qualidadedaagua: true,
-    tanqueevapo: true,
-  });
+  const memoizedData = {};
 
-  const [showPopup, setShowPopup] = useState(false); // Estado para controlar a exibição do pop-up
-  const [popupMessage, setPopupMessage] = useState(''); // Mensagem do pop-up
-
-  const [selectedRainSummary, setSelectedRainSummary] = useState(JSON.parse(localStorage.getItem('selectedRainSummary')) || {
-    "24 HORAS": true,
-    "7 DIAS": true,
-    "30 DIAS": true,
-    "12 MESES": true
-  });
-
-  // Salvar estados no localStorage sempre que forem atualizados
   useEffect(() => {
     localStorage.setItem('codes', codes);
-  }, [codes]);
-
-  useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
-  }, [data]);
-
-  useEffect(() => {
     localStorage.setItem('selectedData', JSON.stringify(selectedData));
-  }, [selectedData]);
-
-  useEffect(() => {
     localStorage.setItem('selectedDetails', JSON.stringify(selectedDetails));
-  }, [selectedDetails]);
+    localStorage.setItem('selectedRainSummary', JSON.stringify(selectedRainSummary));
+  }, [codes, data, selectedData, selectedDetails, selectedRainSummary]);
 
   useEffect(() => {
-    localStorage.setItem('selectedRainSummary', JSON.stringify(selectedRainSummary));
-  }, [selectedRainSummary]);
+    const allDetailKeys = Object.keys(detailLabels);
+    const initialSelectedDetails = allDetailKeys.reduce((acc, key) => {
+      acc[key] = selectedDetails[key] || false;
+      return acc;
+    }, {});
 
-  // Função para buscar os dados das estações
-  const handleFetchData = async () => {
+    setSelectedDetails(initialSelectedDetails);
+  }, [selectedDetails]);  // Adicionando selectedDetails como dependência
+
+
+  const fetchData = async () => {
     if (!codes) {
       setPopupMessage('Por favor, digite os códigos das estações.');
       setShowPopup(true);
-      return;
+      return null;
     }
 
     if (selectedData.detalhes && !Object.values(selectedDetails).some(v => v)) {
       setPopupMessage('Por favor, selecione pelo menos um detalhe.');
       setShowPopup(true);
-      return;
+      return null;
     }
 
     if (selectedData.chuva_ult && !Object.values(selectedRainSummary).some(v => v)) {
       setPopupMessage('Por favor, selecione pelo menos um período de chuva.');
       setShowPopup(true);
-      return;
+      return null;
     }
 
-    setLoading(true); // Ativa o carregamento
+    setLoading(true);
     const codesArray = codes.split(',').map(code => code.trim());
     const fetchedData = {};
 
-    for (let code of codesArray) {
-      fetchedData[code] = {};
-
-      // Sempre buscar o nome da estação
-      const details = await fetchStationDetails(code);
-      if (details.data && details.data.items && details.data.items[0]) {
-        fetchedData[code].nome = details.data.items[0].nome;
+    const requests = codesArray.map(async (code) => {
+      if (memoizedData[code]) {
+        fetchedData[code] = memoizedData[code];
+        return;
       }
 
-      if (selectedData.detalhes) {
+      fetchedData[code] = {};
+
+      try {
         const details = await fetchStationDetails(code);
-        fetchedData[code].detalhes = details.data;
+        if (details.data && details.data.items && details.data.items[0]) {
+          fetchedData[code].nome = details.data.items[0].nome;
+          if (selectedData.detalhes) {
+            fetchedData[code].detalhes = details.data;
+          }
+        }
+      } catch (error) {
+        console.error(`Erro ao buscar detalhes da estação ${code}:`, error);
       }
 
       if (selectedData.hidro_24h) {
-        const hidro24h = await fetchHydro24h(code);
-        fetchedData[code].hidro_24h = hidro24h.data;
+        try {
+          const hidro24h = await fetchHydro24h(code);
+          fetchedData[code].hidro_24h = hidro24h.data;
+        } catch (error) {
+          console.error(`Erro ao buscar dados hidrométricos para a estação ${code}:`, error);
+        }
       }
 
       if (selectedData.chuva_ult) {
-        const chuvaUlt = await fetchRainSummary(code);
-        fetchedData[code].chuva_ult = chuvaUlt.data;
+        try {
+          const chuvaUlt = await fetchRainSummary(code);
+          fetchedData[code].chuva_ult = chuvaUlt.data;
+        } catch (error) {
+          console.error(`Erro ao buscar resumo de chuva para a estação ${code}:`, error);
+        }
+      }
+
+      memoizedData[code] = fetchedData[code];
+    });
+
+    await Promise.all(requests);
+
+    setData(fetchedData);
+    setLoading(false);
+    return fetchedData;
+  };
+
+  const handleFetchData = async () => {
+    const fetchedData = await fetchData();
+    if (fetchedData) {
+      setData(fetchedData);
+    }
+  };
+
+  // Função para obter dados da API e filtrar conforme a seleção do usuário
+   // Função para obter dados da API e filtrar conforme a seleção do usuário
+  const fetchDataAndFilter = async () => {
+    const fetchedData = await fetchData();
+    if (!fetchedData) return;
+
+    const filteredData = {};
+    for (let code in fetchedData) {
+      filteredData[code] = { ...fetchedData[code] };
+
+      if (selectedData.detalhes) {
+        filteredData[code].detalhes = {
+          items: fetchedData[code].detalhes.items.map((item) =>
+            Object.fromEntries(
+              Object.entries(item).filter(([key]) => selectedDetails[key])
+            )
+          )
+        };
+      } else {
+        delete filteredData[code].detalhes;
+      }
+
+      if (!selectedData.hidro_24h) {
+        delete filteredData[code].hidro_24h;
+      }
+
+      if (selectedData.chuva_ult) {
+        filteredData[code].chuva_ult = {
+          items: fetchedData[code].chuva_ult.items.filter((item) =>
+            selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])]
+          )
+        };
+      } else {
+        delete filteredData[code].chuva_ult;
       }
     }
 
-    setData(fetchedData);  // Atualiza o estado com os dados buscados
-    setLoading(false); // Desativa o carregamento
-
+    return filteredData;
   };
 
-  // Função para baixar os dados como arquivo CSV ou XLSX, OK
-  // DOWLOAD APENAS DE ARQUIVOS NÃO VAZIOS OK
-  const handleDownloadData = (format) => {
-    setLoading(true); // Ativa o carregamento
-    if (!data) return;
-
-    const flattenData = (data, type) => {
-      const flattened = [];
-      Object.keys(data).forEach(stationCode => {
-        const stationData = data[stationCode];
-        if (type === 'detalhes' && stationData.detalhes) {
-          stationData.detalhes.items.forEach(item => {
-            const filteredItem = Object.keys(item).reduce((acc, key) => {
-              if (selectedDetails[key]) {
-                acc[key] = item[key];
-              }
-              return acc;
-            }, {});
-            flattened.push({ stationCode, category: 'Detalhes', ...filteredItem });
-          });
-        } else if (type === 'hidro_24h' && stationData.hidro_24h) {
-          stationData.hidro_24h.items.forEach(item => {
-            flattened.push({ stationCode, category: 'Hidro 24h', ...item });
-          });
-        } else if (type === 'chuva_ult' && stationData.chuva_ult) {
-          stationData.chuva_ult.items
-            .filter(item => selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])])
-            .forEach(item => {
-              flattened.push({ stationCode, category: 'Chuva Últ', ...item });
-            });
-        }
-      });
-      return flattened;
-    };
-
-    const setColumnWidths = (worksheet, data) => {
-      const objectMaxLength = [];
-      for (let i = 0; i < data.length; i++) {
-        const value = Object.values(data[i]);
-        for (let j = 0; j < value.length; j++) {
-          objectMaxLength[j] = Math.max(objectMaxLength[j] || 0, safeToString(value[j]).length);
-        }
-      }
-      worksheet['!cols'] = objectMaxLength.map(width => ({ wch: width + 2 }));
-    };
-
-    if (format === 'csv') {
-      const detalhesData = flattenData(data, 'detalhes');
-      const hidro24hData = flattenData(data, 'hidro_24h');
-      const chuvaUltData = flattenData(data, 'chuva_ult');
-
-      const allData = [...detalhesData, ...hidro24hData, ...chuvaUltData];
-      const csv = Papa.unparse(allData);
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      saveAs(blob, 'hydro_station_data.csv');
-    } else if (format === 'xlsx') {
-      const detalhesData = flattenData(data, 'detalhes');
-      const hidro24hData = flattenData(data, 'hidro_24h');
-      const chuvaUltData = flattenData(data, 'chuva_ult');
-
-      const workbook = XLSX.utils.book_new();
-
-      if (detalhesData.length > 0) {
-        const detalhesWorksheet = XLSX.utils.json_to_sheet(detalhesData);
-        setColumnWidths(detalhesWorksheet, detalhesData);
-        XLSX.utils.book_append_sheet(workbook, detalhesWorksheet, 'Detalhes');
-      }
-
-      if (hidro24hData.length > 0) {
-        const hidro24hWorksheet = XLSX.utils.json_to_sheet(hidro24hData);
-        setColumnWidths(hidro24hWorksheet, hidro24hData);
-        XLSX.utils.book_append_sheet(workbook, hidro24hWorksheet, 'Hidro 24h');
-      }
-
-      if (chuvaUltData.length > 0) {
-        const chuvaUltWorksheet = XLSX.utils.json_to_sheet(chuvaUltData);
-        setColumnWidths(chuvaUltWorksheet, chuvaUltData);
-        XLSX.utils.book_append_sheet(workbook, chuvaUltWorksheet, 'Chuva Últ');
-      }
-
-      const xlsxData = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([xlsxData], { type: 'application/octet-stream' });
-      saveAs(blob, 'hydro_station_data.xlsx');
+  // Handler para visualização de dados
+  const handlePreview = async () => {
+    const filteredData = await fetchDataAndFilter();
+    if (filteredData) {
+      const allData = flattenData(filteredData);
+      setPreviewData(allData);
+      setShowPreview(true);
     }
-    setLoading(false); // Desativa o carregamento
   };
 
+  const flattenData = (data) => {
+    const flattened = [];
+    Object.keys(data).forEach(stationCode => {
+      const stationData = data[stationCode];
+      if (selectedData.detalhes && stationData.detalhes) {
+        stationData.detalhes.items.forEach(item => {
+          const filteredItem = Object.keys(item).reduce((acc, key) => {
+            if (selectedDetails[key]) {
+              acc[key] = item[key];
+            }
+            return acc;
+          }, {});
+          flattened.push({ stationCode, category: 'Detalhes', ...filteredItem });
+        });
+      }
+      if (selectedData.hidro_24h && stationData.hidro_24h) {
+        stationData.hidro_24h.items.forEach(item => {
+          flattened.push({ stationCode, category: 'Hidro 24h', ...item });
+        });
+      }
+      if (selectedData.chuva_ult && stationData.chuva_ult) {
+        stationData.chuva_ult.items
+          .filter(item => selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])])
+          .forEach(item => {
+            flattened.push({ stationCode, category: 'Chuva Últ', ...item });
+          });
+      }
+    });
+    return flattened;
+  };
 
-  // Função para lidar com mudanças nas opções selecionadas
+  const handleDownloadData = async (format) => {
+    const fetchedData = await fetchData();
+    if (!fetchedData) return;
+
+    const detalhesData = flattenData(fetchedData, 'detalhes');
+    const hidro24hData = flattenData(fetchedData, 'hidro_24h');
+    const chuvaUltData = flattenData(fetchedData, 'chuva_ult');
+
+    const workbook = XLSX.utils.book_new();
+
+    if (detalhesData.length > 0) {
+      const detalhesWorksheet = XLSX.utils.json_to_sheet(detalhesData);
+      setColumnWidths(detalhesWorksheet, detalhesData);
+      XLSX.utils.book_append_sheet(workbook, detalhesWorksheet, 'Detalhes');
+    }
+
+    if (hidro24hData.length > 0) {
+      const hidro24hWorksheet = XLSX.utils.json_to_sheet(hidro24hData);
+      setColumnWidths(hidro24hWorksheet, hidro24hData);
+      XLSX.utils.book_append_sheet(workbook, hidro24hWorksheet, 'Hidro 24h');
+    }
+
+    if (chuvaUltData.length > 0) {
+      const chuvaUltWorksheet = XLSX.utils.json_to_sheet(chuvaUltData);
+      setColumnWidths(chuvaUltWorksheet, chuvaUltData);
+      XLSX.utils.book_append_sheet(workbook, chuvaUltWorksheet, 'Chuva Últ');
+    }
+
+    const xlsxData = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([xlsxData], { type: 'application/octet-stream' });
+    saveAs(blob, 'hydro_station_data.xlsx');
+
+    setLoading(false);
+  };
+
+  const setColumnWidths = (worksheet, data) => {
+    const objectMaxLength = [];
+    for (let i = 0; i < data.length; i++) {
+      const value = Object.values(data[i]);
+      for (let j = 0; j < value.length; j++) {
+        objectMaxLength[j] = Math.max(objectMaxLength[j] || 0, safeToString(value[j]).length);
+      }
+    }
+    worksheet['!cols'] = objectMaxLength.map(width => ({ wch: width + 2 }));
+  };
+
   const handleCheckboxChange = (e) => {
     setSelectedData({
       ...selectedData,
@@ -232,7 +260,6 @@ const DataInputPage = () => {
     });
   };
 
-  // Função para lidar com mudanças nos sub-filtros
   const handleDetailsCheckboxChange = (e) => {
     setSelectedDetails({
       ...selectedDetails,
@@ -247,9 +274,17 @@ const DataInputPage = () => {
     });
   };
 
-  // Função para fechar o pop-up
   const closePopup = () => {
     setShowPopup(false);
+  };
+
+  const closePreview = () => {
+    setShowPreview(false);
+  };
+
+  const confirmDownload = () => {
+    setShowPreview(false);
+    handleDownloadData();
   };
 
   return (
@@ -264,7 +299,7 @@ const DataInputPage = () => {
         placeholder="Digite os códigos das estações separados por vírgulas"
         value={codes}
         onChange={(e) => setCodes(e.target.value)}
-        style={{ resize: 'vertical' }}  // Permitir redimensionamento vertical
+        style={{ resize: 'vertical' }}
       ></textarea>
       <div style={{ marginBottom: '15px' }}>
         <label className="label-checkbox">
@@ -331,8 +366,8 @@ const DataInputPage = () => {
         </label>
       </div>
       <button onClick={handleFetchData}>Visualizar Dados</button>
-      <button onClick={() => handleDownloadData('csv')}>Baixar Dados CSV</button>
-      <button onClick={() => handleDownloadData('xlsx')}>Baixar Dados XLSX</button>
+      <button onClick={handlePreview}>Pré-visualizar Dados</button>
+      <button onClick={confirmDownload}>Baixar Dados XLSX</button>
       {data && <DataView
         className="data-view"
         data={data}
@@ -343,8 +378,20 @@ const DataInputPage = () => {
       {showPopup && (
         <Popup message={popupMessage} onClose={closePopup} />
       )}
+
+      {showPreview && (
+        <PreviewModal
+          data={previewData}
+          onConfirm={confirmDownload}
+          onCancel={closePreview}
+          selectedDetails={selectedDetails}
+          selectedRainSummary={selectedRainSummary}
+        />
+      )}
     </div>
   );
 };
 
 export default DataInputPage;
+
+// PROBLEMA ATUAL NA EXIBIÇÃO DOS VALORES NA TABELA 'RESUMO DE CHUVAS' EM DATAVIEW (VERIFICANDO)
