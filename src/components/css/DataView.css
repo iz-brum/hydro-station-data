@@ -13,7 +13,7 @@
     border-radius: 8px;
     padding: 16px;
     width: 300px;
-    max-width: 100%;
+    max-width: 41%;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
     background-color: #fff;
@@ -22,13 +22,17 @@
     align-items: center;
     text-align: center;
     margin-bottom: 20px;
-    flex: 1 1 calc(33% - 40px); /* Ajusta a largura para permitir múltiplos cartões lado a lado */
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(33% - 40px);
     box-sizing: border-box;
+    margin: 0 auto;
 }
 
 .station-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: auto;
+    transform: scale(1.05);
 }
 
 .station-card h4 {
@@ -86,3 +90,92 @@ button:hover {
     font-size: 1.2em; /* Fonte maior */
     font-family: monospace; /* Fonte monospace */
 }   
+
+/* Estilos para a página AllHydroDataPage */
+
+.all-hydro-data-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Contêiner para a estação e nome */
+.station-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Muda a direção para coluna */
+    text-align: center;
+    margin-bottom: 20px; /* Espaço inferior para separar do próximo conteúdo */
+}
+
+/* Contêiner interno para alinhar estação e nome na mesma linha */
+.station-header-inner {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para o código da estação */
+.station-code {
+    font-size: 1.5em; /* Tamanho da fonte para o código da estação */
+    color: #333;
+    margin-right: 10px; /* Espaço à direita para separar do nome da estação */
+}
+
+/* Estilos para o nome da estação */
+.station-name {
+    font-size: 1.2em; /* Tamanho da fonte para o nome da estação */
+    color: #555;
+}
+
+
+.all-hydro-data-container table {
+    width: 55%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    table-layout: fixed; /* Fixar a largura das colunas */
+}
+
+.all-hydro-data-container th, 
+.all-hydro-data-container td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: nowrap; /* Evitar quebra de linha */
+}
+
+.all-hydro-data-container th {
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1; /* Manter o cabeçalho acima das linhas */
+}
+
+.all-hydro-data-container td {
+    background-color: #fff;
+}
+
+.all-hydro-data-container tbody tr:nth-child(odd) td {
+    background-color: #f2f2f2;
+}
+
+.all-hydro-data-container button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1.4em;
+    font-family: monospace;
+    width: 27%;
+}
+
+.all-hydro-data-container button:hover {
+    background-color: #0056b3;
+}
