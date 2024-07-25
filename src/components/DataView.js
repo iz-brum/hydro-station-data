@@ -1,16 +1,13 @@
-// hydro-station-data/src/components/DataView.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/DataView.css';  // Importa o novo CSS para os cartões de estação
-import { detailLabels, mapPeriodLabel, formatNumber, formatDate } from '../utils/utils'; // Importa os utilitários
+import './css/DataView.css';
+import { detailLabels, mapPeriodLabel, formatNumber, formatDate } from '../utils/utils';
 
-// Componente para visualizar os dados buscados
 const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
     const navigate = useNavigate();
 
-    const renderHydroData = (hydroData) => {
-        const dataToShow = hydroData.slice(0, 5); // Mostrar apenas os 10 primeiros dados
+    const renderHydroData = (hydroData, stationCode, stationName) => {
+        const dataToShow = hydroData.slice(0, 5); // Exibir apenas os primeiros 5 registros
         return (
             <div>
                 <h5>Dados Hidrométricos 24h</h5>
@@ -34,15 +31,40 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
                         ))}
                     </tbody>
                 </table>
-                <button className="view-more-button" onClick={() => navigate('/all-hydro-data', { state: { data: hydroData } })}>
+                <button
+                    className="view-more-button"
+                    onClick={() => navigate('/all-hydro-data', { state: { data: hydroData, stationCode, stationName } })}
+                >
                     Ver Mais
                 </button>
             </div>
         );
     };
 
-    const filterRainSummary = (rainSummary) => {
-        return rainSummary.filter(item => selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])]);
+    const renderRainSummary = (rainSummary, stationCode) => {
+        if (!rainSummary || rainSummary.length === 0) return null;
+
+        return (
+            <div>
+                <h5>Resumo de Chuva</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th style={{ textAlign: 'center' }}>Soma da Chuva (mm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rainSummary.map((item, index) => (
+                            <tr key={index}>
+                                <td>{mapPeriodLabel(item["'soma_ult_leituras'"])}</td>
+                                <td style={{ textAlign: 'center' }}>{formatNumber(item.sum_chuva)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
     };
 
     if (!data) return null;
@@ -80,31 +102,8 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
                             </table>
                         </div>
                     )}
-                    {data[stationCode].hidro_24h && renderHydroData(data[stationCode].hidro_24h.items)}
-                    {data[stationCode].chuva_ult && (
-                        <div>
-                            <h5>Resumo de Chuva</h5>
-                            <table>
-                                <colgroup>
-                                    <col style={{ width: '145px' }} />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Período</th>
-                                        <th style={{ textAlign: 'center' }}>Soma da Chuva (mm)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filterRainSummary(data[stationCode].chuva_ult.items).map((item, index) => (
-                                        <tr key={index}>
-                                            <td>{mapPeriodLabel(item["'soma_ult_leituras'"])}</td>
-                                            <td style={{ textAlign: 'center' }}>{formatNumber(item.sum_chuva)}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                    {data[stationCode].hidro_24h && renderHydroData(data[stationCode].hidro_24h.items, stationCode, data[stationCode].nome)}
+                    {data[stationCode].chuva_ult && renderRainSummary(data[stationCode].chuva_ult.items, stationCode)}
                 </div>
             ))}
         </div>
@@ -112,3 +111,5 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
 };
 
 export default DataView;
+
+// FILTROS DESMARCADOS EM RESUMO DE CHUVAS CONTINUAM A SEREM RENDERIZADOS EM DATAVIEW.
