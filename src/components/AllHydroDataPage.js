@@ -1,37 +1,27 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-// Função para formatar as datas no horário local do usuário
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const formattedDate = date.toLocaleString('pt-BR', { timeZone: localTimeZone });
-    console.log(`Original: ${dateString}, UTC Date: ${date.toISOString()}, Local Time Zone: ${localTimeZone}, Formatted: ${formattedDate}`);
-    return formattedDate;
-};
-
-
-// Função para formatar os números
-const formatNumber = (number) => {
-    if (number % 1 === 0) {
-        return number.toLocaleString('pt-BR'); // Formata números inteiros
-    }
-    return number.toLocaleString('pt-BR', { minimumFractionDigits: 1 }); // Formata números decimais
-};
+import { formatNumber, formatDate } from '../utils/utils'; // Importa os utilitários
+import './css/DataView.css';  // Importa o novo CSS para os cartões de estação
 
 // Componente para exibir todos os dados hidrométricos
 const AllHydroDataPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const data = location.state?.data;
+    const { data, stationCode, stationName } = location.state || {};
 
     if (!data) {
         return <div>Nenhum dado disponível.</div>;
     }
 
     return (
-        <div>
-            <h3>Todos os Dados Hidrométricos 24h</h3>
+        <div className="all-hydro-data-container">
+            <div className="station-header">
+                <div className="station-header-inner">
+                    <h3 className="station-code">Estação {stationCode}</h3>
+                    <h4 className="station-name">{stationName || 'Nome não disponível'}</h4>
+                </div>
+                <h3 style={{ margin: '0' }}>Dados Hidrométricos 24h</h3>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -58,5 +48,3 @@ const AllHydroDataPage = () => {
 };
 
 export default AllHydroDataPage;
-
-// VERSÃO ANTERIOR OK
