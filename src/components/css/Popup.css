@@ -11,10 +11,13 @@
   }
   
   .popup-content {
-    background: white;
+    background: #302929;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+    font-size: x-large;
+    width: 35%;
+    height: auto;
   }
   
   .popup-content button {

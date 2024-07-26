@@ -1,42 +1,36 @@
-/* Estilo geral */
+/* Estilos Gerais */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  /* Conteúdo */
-  .container {
-    padding: 20px;
-  }
-  
-  h2 {
-    color: #333;
-  }
-  
-  /* Tabelas */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 5px 0 10px;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #333;
-    color: white;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1E1E1E; /* Fundo escuro */
+  color: #FFFFFF; /* Texto branco */
+}
+
+a {
+  color: #1E90FF; /* Azul claro */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #FFD700; /* Dourado no hover */
+  text-decoration: none;
+}
+
+button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  margin: 1rem 0.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #1E90FF; /* Azul claro */
+  color: #FFFFFF;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+  background-color: #FFD700; /* Dourado */
+  transform: translateY(-2px);
+}

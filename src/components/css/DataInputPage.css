@@ -3,73 +3,47 @@
 /* Estilos para o container */
 .container {
     padding: 2rem;
-    background-color: #fff;
+    background-color: #2C2C2E;
     margin: 2rem auto;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    width: 90%;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    width: 80%;
+    color: #f4f4f4;
 }
+
 
 /* Estilos para o título */
 .container h2 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
     margin: 0 0 25px;
+    font-size: 2rem;
+}
+
+.list-stations:hover {
+    cursor: auto;
+    color: white;
 }
 
 /* Estilos para o textarea */
 textarea {
-    width: 98.7%;
-    padding: 0.5rem;
+    width: 100%;
+    padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #444;
+    border-radius: 8px;
     resize: none;
+    background-color: #3C3C3E;
+    color: #f4f4f4;
     font-family: Arial, sans-serif;
-}
-
-.details-checkbox {
-    accent-color: green; /* Cor de acentuação específica */
-}
-
-/* Estilos para os checkboxes de hidro */
-.hydro-checkbox {
-    accent-color: blue; /* Cor de acentuação específica */
-}
-
-/* Estilos para os checkboxes de resumo de chuva */
-.rain-checkbox {
-    accent-color: yellow; /* Cor de acentuação específica */
-}
-
-label {
-    display: flex;
-    align-items: center;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-input[type="checkbox"],
-input[type="date"] {
-    margin-right: 0.5rem;
-}
-
-/* Estilos para os botões */
-button {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 0.5rem 0.5rem 0;
-    border: none;
-    border-radius: 4px;
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+    /* Adiciona isso para incluir padding e border na largura total */
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
 }
 
 /* Estilos para a visualização dos dados */
@@ -77,52 +51,219 @@ button:hover {
     margin-top: 2rem;
 }
 
-/* Estilos para os sub-filtros */
-.sub-filters {
+.filters-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
-    padding-left: 1rem;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.sub-filters label {
-    margin-bottom: 0.3rem;
-}
-
-/* Estilos para filtros de intervalo de datas */
-.date-filters {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
-.date-filters label {
-    flex: 1;
-    width: max-content;
-}
-
-.date-input {
-    margin: 0 5px;
-}
-
+/* Estilos para os filtros */
 .filters {
-    margin: 0 0 20px;
-}
-
-/* Estilos para dispor os filtros de detalhes em 4 colunas */
-.details-filters {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
-    margin: 10px 15px 20px;
+    margin: 10px 0;
+    overflow-x: auto; /* Adiciona a barra de rolagem horizontal */
+    padding-bottom: 10px; /* Espaço extra para a barra de rolagem */
+    scrollbar-width: thin; /* Para navegadores que suportam */
 }
 
 .label-checkbox {
-    font-family: monospace;
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #f1f1f1;
+    white-space: nowrap;
 }
 
-.filtro-n1 {
-    font-size: 1.2rem;
-    font-family: monospace;
+.category {
+    background-color: #383838cc;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category h3 {
+    cursor: pointer;
+    color: #f1f1f1;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    width: max-content;
+}
+
+.category .select-buttons {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.category .select-buttons button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.category .select-buttons button:hover {
+    background-color: #0056b3;
+}
+
+
+/* Estilos para os checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: #1a1a1a;
+    margin-right: 10px;
+    transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="checkbox"]:checked {
+    border-color: #007BFF;
+    background-color: #007BFF;
+}
+
+input[type="checkbox"]:checked::before {
+    content: '✖';
+    font-size: 17px;
+    color: #2d2d2d;
+    position: absolute;
+    left: 2px;
+    top: -4px;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #0056b3;
+}
+
+/* Estilos para os labels */
+label {
+    display: flex;
+    align-items: center;
+    color: #f1f1f1;
+    width: max-content;
+    margin-bottom: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    /* Fonte monoespaçada */
+    font-size: 1.15rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+label:hover {
+    color: #d1d1d1;
+}
+
+/* Reduzir a fonte para viewports menores (zoom in) */
+@media (max-width: 1300px) {
+    .label-checkbox {
+        font-size: 0.9rem;
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    input[type="checkbox"]:checked::before {
+        font-size: 13px;
+        left: 1px;
+        top: -3px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .label-checkbox {
+        font-size: 0.8rem;
+    }
+
+    input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+    }
+
+    input[type="checkbox"]:checked::before {
+        font-size: 13px;
+        left: 1px;
+        top: -3px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .label-checkbox {
+        font-size: 0.5rem;
+    }
+
+    input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+    }
+    
+    input[type="checkbox"]:checked::before {
+        font-size: 13px;
+        left: 1px;
+        top: -3px;
+    }
+}
+
+@media (max-width: 900px) {
+    .label-checkbox {
+        font-size: 0.6rem;
+    }
+
+    input[type="checkbox"] {
+        width: 13px;
+        height: 13px;
+    }
+    
+    input[type="checkbox"]:checked::before {
+        font-size: 12px;
+        left: 0px;
+        top: -4px;
+    }
+}
+
+@media (max-width: 800px) {
+    .label-checkbox {
+        font-size: 0.55rem;
+    }
+
+    input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+    
+    input[type="checkbox"]:checked::before {
+        font-size: 11px;
+        left: 0px;
+        top: -3px;
+    }
+}
+
+@media (max-width: 700px) {
+    .label-checkbox {
+        font-size: 0.45rem;
+    }
+    
+    input[type="checkbox"] {
+        width: 11px;
+        height: 11px;
+    }
+
+    input[type="checkbox"]:checked::before {
+        font-size: 9px;
+        left: 1px;
+        top: -3px;
+    }
 }

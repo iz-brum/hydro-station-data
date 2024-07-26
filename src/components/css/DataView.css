@@ -4,144 +4,133 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: flex-start; /* Alinha os cartões ao início */
+    justify-content: flex-start;
     margin-top: 30px;
 }
 
 .station-card {
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 8px;
-    padding: 16px;
+    padding: 20px;
     width: 300px;
-    max-width: 41%;
+    max-width: calc(100% - 40px);
     cursor: pointer;
     transition: box-shadow 0.3s ease;
-    background-color: #fff;
+    background-color: #1a1a1a;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     margin-bottom: 20px;
     flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: calc(33% - 40px);
     box-sizing: border-box;
-    margin: 0 auto;
 }
 
 .station-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    cursor: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     transform: scale(1.05);
 }
 
 .station-card h4 {
-    margin: 10px 0 -5px;
-    font-size: 1.25em;
-    color: #333;
+    margin: 10px 0;
+    font-size: 1.5rem;
+    color: #fff;
 }
 
 .station-card h5 {
     text-align: left;
     margin-bottom: auto;
     font-family: monospace;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: #ccc;
 }
 
 .station-card table {
     width: 100%;
     table-layout: fixed;
     word-wrap: break-word;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    margin-top: 10px;
 }
 
 .station-card th, .station-card td {
     text-align: left;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
 }
 
 .station-card th {
-    background-color: black;
+    background-color: #333;
+    color: #fff;
     font-weight: bold;
 }
 
 .station-card td {
-    background-color: #fff;
+    background-color: #1e1e1e;
+    color: #fff;
 }
 
-button {
+.station-card .view-more-button {
+    width: 90%;
+    font-size: 1.1rem;
+    font-family: monospace;
     margin-top: 10px;
-    padding: 0.5rem 1rem;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
     border: none;
     border-radius: 4px;
-    background-color: #007BFF;
-    color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
+.station-card .view-more-button:hover {
     background-color: #0056b3;
 }
 
-.station-card .view-more-button {
-    width: 100%;
-    font-size: 1.2em; /* Fonte maior */
-    font-family: monospace; /* Fonte monospace */
-}   
-
-/* Estilos para a página AllHydroDataPage */
-
 .all-hydro-data-container {
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #1a1a1a;
+    color: #f4f4f4;
 }
 
-/* Contêiner para a estação e nome */
 .station-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Muda a direção para coluna */
+    flex-direction: column;
     text-align: center;
-    margin-bottom: 20px; /* Espaço inferior para separar do próximo conteúdo */
+    margin-bottom: 20px;
 }
 
-/* Contêiner interno para alinhar estação e nome na mesma linha */
 .station-header-inner {
     display: flex;
     align-items: center;
 }
 
-/* Estilos para o código da estação */
 .station-code {
-    font-size: 1.5em; /* Tamanho da fonte para o código da estação */
-    color: #333;
-    margin-right: 10px; /* Espaço à direita para separar do nome da estação */
+    font-size: 1.5rem;
+    color: #fff;
+    margin-right: 10px;
 }
 
-/* Estilos para o nome da estação */
 .station-name {
-    font-size: 1.2em; /* Tamanho da fonte para o nome da estação */
-    color: #555;
+    font-size: 1.2rem;
+    color: #ccc;
 }
-
 
 .all-hydro-data-container table {
-    width: 55%;
+    width: 100%;
     border-collapse: collapse;
     margin: 0 auto;
-    font-size: 0.95rem;
-    table-layout: fixed; /* Fixar a largura das colunas */
+    font-size: 1rem;
+    table-layout: fixed;
 }
 
-.all-hydro-data-container th, 
-.all-hydro-data-container td {
+.all-hydro-data-container th, .all-hydro-data-container td {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     text-align: center;
-    white-space: nowrap; /* Evitar quebra de linha */
 }
 
 .all-hydro-data-container th {
@@ -150,15 +139,15 @@ button:hover {
     font-weight: bold;
     position: sticky;
     top: 0;
-    z-index: 1; /* Manter o cabeçalho acima das linhas */
+    z-index: 1;
 }
 
 .all-hydro-data-container td {
-    background-color: #fff;
+    background-color: #1e1e1e;
 }
 
 .all-hydro-data-container tbody tr:nth-child(odd) td {
-    background-color: #f2f2f2;
+    background-color: #2c2c2c;
 }
 
 .all-hydro-data-container button {
@@ -171,9 +160,8 @@ button:hover {
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 1.4em;
+    font-size: 1.2rem;
     font-family: monospace;
-    width: 27%;
 }
 
 .all-hydro-data-container button:hover {
