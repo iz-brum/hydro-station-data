@@ -14,8 +14,8 @@ const App = () => {
       <Router>
         <nav>
           <ul>
-            <li><Link to="/">Início</Link></li>
-            <li><Link to="/data-input">Entrada de Dados</Link></li>
+            <li><Link to="/">INÍCIO</Link></li>
+            <li><Link to="/data-input">PESQUISAR ESTAÇÕES</Link></li>
           </ul>
         </nav>
         <Routes>
