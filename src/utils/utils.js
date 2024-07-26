@@ -1,6 +1,5 @@
 // hydro-station-data/src/utils/utils.js
 
-// Função para mapear os valores dos períodos para novas legendas
 export const mapPeriodLabel = (period) => {
     const periodMap = {
         "soma_ult_leituras": "24 HORAS",
@@ -11,6 +10,7 @@ export const mapPeriodLabel = (period) => {
     return periodMap[period] || period;
 };
 
+
 // Mapeamento dos rótulos dos detalhes
 export const detailLabels = {
     nome: "Nome",
@@ -19,22 +19,22 @@ export const detailLabels = {
     rio: "Rio",
     estado: "Estado",
     municipio: "Município",
-    responsavel: "Responsável",
-    operadora: "Operadora",
     latitude: "Latitude",
     longitude: "Longitude",
-    areadrenagem: "Área de Drenagem",
-    tipoestacao: "Tipo de Estação",
+    escala: "Escala",
+    operadora: "Operadora",
     operando: "Operando",
+    responsavel: "Responsável",
     telemetrica: "Telemétrica",
+    sedimentos: "Sedimentos",
+    areadrenagem: "Área de Drenagem",
     climatologica: "Climatológica",
     pluviometro: "Pluviômetro",
-    registradorchuva: "Registrador de Chuva",
-    escala: "Escala",
-    registradornivel: "Registrador de Nível",
+    tipoestacao: "Tipo de Estação",
     descargaliquida: "Descarga Líquida",
-    sedimentos: "Sedimentos",
     qualidadedaagua: "Qualidade da Água",
+    registradornivel: "Registrador de Nível",
+    registradorchuva: "Registrador de Chuva",
     tanqueevapo: "Tanque Evaporimétrico"
 };
 
