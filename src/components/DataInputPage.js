@@ -26,16 +26,33 @@ const DataInputPage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [previewData, setPreviewData] = useState([]);
   const [selectedRainSummary, setSelectedRainSummary] = useState(JSON.parse(localStorage.getItem('selectedRainSummary')) || {});
+  const [selectedHydro24h, setSelectedHydro24h] = useState(JSON.parse(localStorage.getItem('selectedHydro24h')) || {});
 
   const memoizedData = {};
 
   useEffect(() => {
     localStorage.setItem('codes', codes);
+  }, [codes]);
+
+  useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
+  }, [data]);
+
+  useEffect(() => {
     localStorage.setItem('selectedData', JSON.stringify(selectedData));
+  }, [selectedData]);
+
+  useEffect(() => {
     localStorage.setItem('selectedDetails', JSON.stringify(selectedDetails));
+  }, [selectedDetails]);
+
+  useEffect(() => {
     localStorage.setItem('selectedRainSummary', JSON.stringify(selectedRainSummary));
-  }, [codes, data, selectedData, selectedDetails, selectedRainSummary]);
+  }, [selectedRainSummary]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedHydro24h', JSON.stringify(selectedHydro24h));
+  }, [selectedHydro24h]);
 
   useEffect(() => {
     const allDetailKeys = Object.keys(detailLabels);
@@ -43,10 +60,37 @@ const DataInputPage = () => {
       acc[key] = selectedDetails[key] || false;
       return acc;
     }, {});
-
     setSelectedDetails(initialSelectedDetails);
-  }, [selectedDetails]);  // Adicionando selectedDetails como dependência
+  }, []);
 
+  useEffect(() => {
+    const allRainKeys = [
+      'soma_ult_leituras', // As chaves devem incluir as aspas simples extras
+      "ultimos 7d",
+      "ultimos 30d",
+      "ultimos 12 meses"
+    ];
+    const initialSelectedRainSummary = allRainKeys.reduce((acc, key) => {
+      acc[key] = selectedRainSummary[key] || false;
+      return acc;
+    }, {});
+    setSelectedRainSummary(initialSelectedRainSummary);
+  }, []);
+
+
+  useEffect(() => {
+    const allHydro24hKeys = [
+      "data",
+      "chuva",
+      "nivel",
+      "vazao"
+    ];
+    const initialSelectedHydro24h = allHydro24hKeys.reduce((acc, key) => {
+      acc[key] = selectedHydro24h[key] || false;
+      return acc;
+    }, {});
+    setSelectedHydro24h(initialSelectedHydro24h);
+  }, []);
 
   const fetchData = async () => {
     if (!codes) {
@@ -81,6 +125,7 @@ const DataInputPage = () => {
 
       try {
         const details = await fetchStationDetails(code);
+        // console.log(`Detalhes da estação ${code}:`, details.data);
         if (details.data && details.data.items && details.data.items[0]) {
           fetchedData[code].nome = details.data.items[0].nome;
           if (selectedData.detalhes) {
@@ -94,6 +139,7 @@ const DataInputPage = () => {
       if (selectedData.hidro_24h) {
         try {
           const hidro24h = await fetchHydro24h(code);
+          // console.log(`Dados hidrométricos 24h da estação ${code}:`, hidro24h.data);
           fetchedData[code].hidro_24h = hidro24h.data;
         } catch (error) {
           console.error(`Erro ao buscar dados hidrométricos para a estação ${code}:`, error);
@@ -103,6 +149,7 @@ const DataInputPage = () => {
       if (selectedData.chuva_ult) {
         try {
           const chuvaUlt = await fetchRainSummary(code);
+          // console.log(`Resumo de chuva da estação ${code}:`, chuvaUlt.data);
           fetchedData[code].chuva_ult = chuvaUlt.data;
         } catch (error) {
           console.error(`Erro ao buscar resumo de chuva para a estação ${code}:`, error);
@@ -114,6 +161,7 @@ const DataInputPage = () => {
 
     await Promise.all(requests);
 
+    // console.log('Dados completos:', fetchedData);
     setData(fetchedData);
     setLoading(false);
     return fetchedData;
@@ -126,8 +174,6 @@ const DataInputPage = () => {
     }
   };
 
-  // Função para obter dados da API e filtrar conforme a seleção do usuário
-   // Função para obter dados da API e filtrar conforme a seleção do usuário
   const fetchDataAndFilter = async () => {
     const fetchedData = await fetchData();
     if (!fetchedData) return;
@@ -148,33 +194,47 @@ const DataInputPage = () => {
         delete filteredData[code].detalhes;
       }
 
-      if (!selectedData.hidro_24h) {
+      if (selectedData.hidro_24h) {
+        filteredData[code].hidro_24h = {
+          items: fetchedData[code].hidro_24h.items.map((item) =>
+            Object.fromEntries(
+              Object.entries(item).filter(([key]) => selectedHydro24h[key])
+            )
+          )
+        };
+      } else {
         delete filteredData[code].hidro_24h;
       }
 
       if (selectedData.chuva_ult) {
         filteredData[code].chuva_ult = {
-          items: fetchedData[code].chuva_ult.items.filter((item) =>
-            selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])]
-          )
+          items: fetchedData[code].chuva_ult.items.filter((item) => {
+            const periodKey = item["'soma_ult_leituras'"];
+            // const periodLabel = mapPeriodLabel(periodKey);
+            return selectedRainSummary[periodKey];
+          })
         };
       } else {
         delete filteredData[code].chuva_ult;
       }
+
     }
 
+    console.log('Dados filtrados:', filteredData);
     return filteredData;
   };
 
-  // Handler para visualização de dados
+
   const handlePreview = async () => {
     const filteredData = await fetchDataAndFilter();
     if (filteredData) {
       const allData = flattenData(filteredData);
+      console.log('Dados para pré-visualização:', allData);
       setPreviewData(allData);
       setShowPreview(true);
     }
   };
+
 
   const flattenData = (data) => {
     const flattened = [];
@@ -188,32 +248,46 @@ const DataInputPage = () => {
             }
             return acc;
           }, {});
-          flattened.push({ stationCode, category: 'Detalhes', ...filteredItem });
+          flattened.push({ category: 'Detalhes', stationCode, ...filteredItem });
         });
       }
       if (selectedData.hidro_24h && stationData.hidro_24h) {
         stationData.hidro_24h.items.forEach(item => {
-          flattened.push({ stationCode, category: 'Hidro 24h', ...item });
+          const filteredItem = Object.keys(item).reduce((acc, key) => {
+            if (selectedHydro24h[key]) {
+              acc[key] = item[key];
+            }
+            return acc;
+          }, {});
+          flattened.push({ stationCode, category: 'Hidro 24h', ...filteredItem });
         });
       }
       if (selectedData.chuva_ult && stationData.chuva_ult) {
-        stationData.chuva_ult.items
-          .filter(item => selectedRainSummary[mapPeriodLabel(item["'soma_ult_leituras'"])])
-          .forEach(item => {
-            flattened.push({ stationCode, category: 'Chuva Últ', ...item });
-          });
+        stationData.chuva_ult.items.forEach(item => {
+          const periodKey = item["'soma_ult_leituras'"];
+          if (selectedRainSummary[periodKey]) {
+            const periodLabel = mapPeriodLabel(periodKey);
+            flattened.push({
+              category: 'Chuva Últ',
+              stationCode,
+              period: periodLabel,
+              sum_chuva: item.sum_chuva
+            });
+          }
+        });
       }
     });
     return flattened;
   };
 
+  //OK 1/2
   const handleDownloadData = async (format) => {
     const fetchedData = await fetchData();
     if (!fetchedData) return;
 
-    const detalhesData = flattenData(fetchedData, 'detalhes');
-    const hidro24hData = flattenData(fetchedData, 'hidro_24h');
-    const chuvaUltData = flattenData(fetchedData, 'chuva_ult');
+    const detalhesData = flattenData(fetchedData).filter(d => d.category === 'Detalhes');
+    const hidro24hData = flattenData(fetchedData).filter(d => d.category === 'Hidro 24h');
+    const chuvaUltData = flattenData(fetchedData).filter(d => d.category === 'Chuva Últ');
 
     const workbook = XLSX.utils.book_new();
 
@@ -253,6 +327,7 @@ const DataInputPage = () => {
     worksheet['!cols'] = objectMaxLength.map(width => ({ wch: width + 2 }));
   };
 
+
   const handleCheckboxChange = (e) => {
     setSelectedData({
       ...selectedData,
@@ -274,6 +349,13 @@ const DataInputPage = () => {
     });
   };
 
+  const handleHydro24hCheckboxChange = (e) => {
+    setSelectedHydro24h({
+      ...selectedHydro24h,
+      [e.target.name]: e.target.checked,
+    });
+  };
+
   const closePopup = () => {
     setShowPopup(false);
   };
@@ -287,10 +369,47 @@ const DataInputPage = () => {
     handleDownloadData();
   };
 
+  const selectAll = (category, isSelected) => {
+    if (category === 'detalhes') {
+      const newSelectedDetails = Object.keys(selectedDetails).reduce((acc, key) => {
+        acc[key] = isSelected;
+        return acc;
+      }, {});
+      setSelectedDetails(newSelectedDetails);
+    } else if (category === 'chuva_ult') {
+      const newSelectedRainSummary = Object.keys(selectedRainSummary).reduce((acc, key) => {
+        acc[key] = isSelected;
+        return acc;
+      }, {});
+      setSelectedRainSummary(newSelectedRainSummary);
+    } else if (category === 'hidro_24h') {
+      const newSelectedHydro24h = Object.keys(selectedHydro24h).reduce((acc, key) => {
+        acc[key] = isSelected;
+        return acc;
+      }, {});
+      setSelectedHydro24h(newSelectedHydro24h);
+    }
+  };
+
+  // Estados de visibilidade
+  const [showDetails, setShowDetails] = useState(true);
+  const [showRainSummary, setShowRainSummary] = useState(true);
+  const [showHydro24h, setShowHydro24h] = useState(true);
+
+  const toggleVisibility = (category) => {
+    if (category === 'detalhes') {
+      setShowDetails(prev => !prev);
+    } else if (category === 'chuva_ult') {
+      setShowRainSummary(prev => !prev);
+    } else if (category === 'hidro_24h') {
+      setShowHydro24h(prev => !prev);
+    }
+  };
+
   return (
     <div className="container">
       <h2>Página de Entrada de Dados</h2>
-      <label>
+      <label className='list-stations'>
         Lista de códigos de estações:
       </label>
       <textarea
@@ -301,78 +420,95 @@ const DataInputPage = () => {
         onChange={(e) => setCodes(e.target.value)}
         style={{ resize: 'vertical' }}
       ></textarea>
-      <div style={{ marginBottom: '15px' }}>
-        <label className="label-checkbox">
-          <input
-            type="checkbox"
-            name="detalhes"
-            className="details-checkbox"
-            checked={selectedData.detalhes}
-            onChange={handleCheckboxChange}
-          />
-          Detalhes
-        </label>
-        {selectedData.detalhes && (
-          <div className="details-filters">
-            {Object.keys(selectedDetails).filter(key => key !== 'codigo').map((key) => (
-              <label key={key}>
-                <input
-                  type="checkbox"
-                  name={key}
-                  className="details-checkbox"
-                  checked={selectedDetails[key]}
-                  onChange={handleDetailsCheckboxChange}
-                />
-                {detailLabels[key]}
-              </label>
-            ))}
-          </div>
-        )}
-        <label className="label-checkbox">
-          <input
-            type="checkbox"
-            name="chuva_ult"
-            className="rain-checkbox"
-            checked={selectedData.chuva_ult}
-            onChange={handleCheckboxChange}
-          />
-          Resumo de Chuva
-        </label>
-        {selectedData.chuva_ult && (
-          <div className="details-filters">
-            {Object.keys(selectedRainSummary).map((key) => (
-              <label key={key}>
-                <input
-                  type="checkbox"
-                  name={key}
-                  className="rain-checkbox"
-                  checked={selectedRainSummary[key]}
-                  onChange={handleRainSummaryCheckboxChange}
-                />
-                {key}
-              </label>
-            ))}
-          </div>
-        )}
-        <label className="label-checkbox">
-          <input
-            type="checkbox"
-            name="hidro_24h"
-            className="hydro-checkbox"
-            checked={selectedData.hidro_24h}
-            onChange={handleCheckboxChange}
-          />
-          Dados Hidrométricos 24h
-        </label>
+      <div className="filters-container">
+        <div className="category">
+          <h3 onClick={() => toggleVisibility('detalhes')}>Ficha da estação</h3>
+          {showDetails && (
+            <>
+              <div className="select-buttons">
+                <button onClick={() => selectAll('detalhes', true)}>Selecionar todos</button>
+                <button onClick={() => selectAll('detalhes', false)}>Desmarcar todos</button>
+              </div>
+              <div className="filters">
+                {Object.keys(selectedDetails).filter(key => key !== 'codigo').map((key) => (
+                  <label key={key} className='label-checkbox'>
+                    <input
+                      type="checkbox"
+                      name={key}
+                      className="details-checkbox"
+                      checked={selectedDetails[key]}
+                      onChange={handleDetailsCheckboxChange}
+                    />
+                    {detailLabels[key]}
+                  </label>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="category">
+          <h3 onClick={() => toggleVisibility('chuva_ult')}>Resumo de Chuva</h3>
+          {showRainSummary && (
+            <>
+              <div className="select-buttons">
+                <button onClick={() => selectAll('chuva_ult', true)}>Selecionar todos</button>
+                <button onClick={() => selectAll('chuva_ult', false)}>Desmarcar todos</button>
+              </div>
+              <div className="filters">
+                {Object.keys(selectedRainSummary).map((key) => (
+                  <label key={key} className='label-checkbox'>
+                    <input
+                      type="checkbox"
+                      name={key}
+                      className="rain-checkbox"
+                      checked={selectedRainSummary[key]}
+                      onChange={handleRainSummaryCheckboxChange}
+                    />
+                    {key}
+                  </label>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="category">
+          <h3 onClick={() => toggleVisibility('hidro_24h')}>Dados Hidrométricos 24h</h3>
+          {showHydro24h && (
+            <>
+              <div className="select-buttons">
+                <button onClick={() => selectAll('hidro_24h', true)}>Selecionar todos</button>
+                <button onClick={() => selectAll('hidro_24h', false)}>Desmarcar todos</button>
+              </div>
+              <div className="filters">
+                {Object.keys(selectedHydro24h).map((key) => (
+                  <label key={key} className='label-checkbox'>
+                    <input
+                      type="checkbox"
+                      name={key}
+                      className="hydro-checkbox"
+                      checked={selectedHydro24h[key]}
+                      onChange={handleHydro24hCheckboxChange}
+                    />
+                    {key}
+                  </label>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      <button onClick={handleFetchData}>Visualizar Dados</button>
-      <button onClick={handlePreview}>Pré-visualizar Dados</button>
-      <button onClick={confirmDownload}>Baixar Dados XLSX</button>
+
+      <button onClick={handleFetchData}>Buscar e Exibir Dados</button>
+      <button onClick={handlePreview}>Revisar Dados Antes do Download</button>
+      <button onClick={confirmDownload}>Confirmar e Baixar Dados XLSX</button>
       {data && <DataView
         className="data-view"
         data={data}
         selectedDetails={selectedDetails}
         selectedRainSummary={selectedRainSummary}
+        selectedHydro24h={selectedHydro24h}
       />}
 
       {showPopup && (
@@ -386,6 +522,7 @@ const DataInputPage = () => {
           onCancel={closePreview}
           selectedDetails={selectedDetails}
           selectedRainSummary={selectedRainSummary}
+          selectedHydro24h={selectedHydro24h}
         />
       )}
     </div>
@@ -393,5 +530,3 @@ const DataInputPage = () => {
 };
 
 export default DataInputPage;
-
-// PROBLEMA ATUAL NA EXIBIÇÃO DOS VALORES NA TABELA 'RESUMO DE CHUVAS' EM DATAVIEW (VERIFICANDO)

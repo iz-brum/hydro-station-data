@@ -1,32 +1,38 @@
+// hydro-station-data/src/components/DataView.js
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/DataView.css';
-import { detailLabels, mapPeriodLabel, formatNumber, formatDate } from '../utils/utils';
+import { detailLabels, formatNumber, formatDate } from '../utils/utils';
 
-const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
+const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selectedHydro24h }) => {
+    // console.log('Dados recebidos pelo DataView:', data); 
+
     const navigate = useNavigate();
 
     const renderHydroData = (hydroData, stationCode, stationName) => {
         const dataToShow = hydroData.slice(0, 5); // Exibir apenas os primeiros 5 registros
+        if (!hydroData || hydroData.length === 0) return null;
+        
         return (
             <div>
                 <h5>Dados Hidrométricos 24h</h5>
                 <table>
                     <thead>
                         <tr>
-                            <th>Data</th>
-                            <th style={{ textAlign: 'center' }}>Chuva (mm)</th>
-                            <th style={{ textAlign: 'center' }}>Nível (cm)</th>
-                            <th style={{ textAlign: 'center' }}>Vazão (m³/s)</th>
+                            {selectedHydro24h.data && <th>Data</th>}
+                            {selectedHydro24h.chuva && <th style={{ textAlign: 'center' }}>Chuva (mm)</th>}
+                            {selectedHydro24h.nivel && <th style={{ textAlign: 'center' }}>Nível (cm)</th>}
+                            {selectedHydro24h.vazao && <th style={{ textAlign: 'center' }}>Vazão (m³/s)</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {dataToShow.map((item, index) => (
                             <tr key={index}>
-                                <td>{formatDate(item.data)}</td>
-                                <td style={{ textAlign: 'center' }}>{formatNumber(item.chuva)}</td>
-                                <td style={{ textAlign: 'center' }}>{formatNumber(item.nivel)}</td>
-                                <td style={{ textAlign: 'center' }}>{formatNumber(item.vazao)}</td>
+                                {selectedHydro24h.data && <td>{formatDate(item.data)}</td>}
+                                {selectedHydro24h.chuva && <td style={{ textAlign: 'center' }}>{formatNumber(item.chuva)}</td>}
+                                {selectedHydro24h.nivel && <td style={{ textAlign: 'center' }}>{formatNumber(item.nivel)}</td>}
+                                {selectedHydro24h.vazao && <td style={{ textAlign: 'center' }}>{formatNumber(item.vazao)}</td>}
                             </tr>
                         ))}
                     </tbody>
@@ -43,7 +49,9 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
 
     const renderRainSummary = (rainSummary, stationCode) => {
         if (!rainSummary || rainSummary.length === 0) return null;
-
+    
+        console.log(`Resumo de chuva para a estação ${stationCode}:`, rainSummary); // Adicione isto
+    
         return (
             <div>
                 <h5>Resumo de Chuva</h5>
@@ -55,12 +63,14 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {rainSummary.map((item, index) => (
-                            <tr key={index}>
-                                <td>{mapPeriodLabel(item["'soma_ult_leituras'"])}</td>
-                                <td style={{ textAlign: 'center' }}>{formatNumber(item.sum_chuva)}</td>
-                            </tr>
-                        ))}
+                        {rainSummary
+                            .filter(item => selectedRainSummary[item["'soma_ult_leituras'"]])
+                            .map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item["'soma_ult_leituras'"]}</td>
+                                    <td style={{ textAlign: 'center' }}>{formatNumber(item.sum_chuva)}</td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
@@ -108,8 +118,6 @@ const DataView = ({ data, selectedDetails, selectedRainSummary }) => {
             ))}
         </div>
     );
-};
+});
 
 export default DataView;
-
-// FILTROS DESMARCADOS EM RESUMO DE CHUVAS CONTINUAM A SEREM RENDERIZADOS EM DATAVIEW.
