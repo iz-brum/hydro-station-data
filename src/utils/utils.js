@@ -10,6 +10,19 @@ export const mapPeriodLabel = (period) => {
     return periodMap[period] || period;
 };
 
+export const rainSummaryLabels = {
+    'soma_ult_leituras': '24 Horas',
+    "ultimos 7d": '7 Dias',
+    "ultimos 30d": '30 Dias',
+    "ultimos 12 meses": '12 Meses'
+};
+
+export const hydroDataLabels = {
+    "data": "Data",
+    "chuva": "Chuva (mm)",
+    "nivel": "Nível (cm)",
+    "vazao": "Vazão (m³/s)"
+};
 
 // Mapeamento dos rótulos dos detalhes
 export const detailLabels = {
@@ -18,7 +31,7 @@ export const detailLabels = {
     subbacia: "Sub-bacia",
     rio: "Rio",
     estado: "Estado",
-    municipio: "Município",
+    municipio: "Município", 
     latitude: "Latitude",
     longitude: "Longitude",
     escala: "Escala",
@@ -93,3 +106,74 @@ export const formatNumber = (number) => {
 export const safeToString = (value) => {
     return value !== null && value !== undefined ? value.toString() : '';
 };
+
+
+export const flattenData = (data, selectedData, selectedDetails, selectedHydro24h, selectedRainSummary) => {
+    const flattened = [];
+    Object.keys(data).forEach(stationCode => {
+      const stationData = data[stationCode];
+      if (selectedData.detalhes && stationData.detalhes) {
+        stationData.detalhes.items.forEach(item => {
+          const filteredItem = Object.keys(item).reduce((acc, key) => {
+            if (selectedDetails[key]) {
+              acc[key] = item[key];
+            }
+            return acc;
+          }, {});
+          flattened.push({ category: 'Detalhes', stationCode, ...filteredItem });
+        });
+      }
+      if (selectedData.hidro_24h && stationData.hidro_24h) {
+        stationData.hidro_24h.items.forEach(item => {
+          const filteredItem = Object.keys(item).reduce((acc, key) => {
+            if (selectedHydro24h[key]) {
+              acc[key] = item[key];
+            }
+            return acc;
+          }, {});
+          flattened.push({ category: 'Hidro 24h', stationCode, ...filteredItem });
+        });
+      }
+      if (selectedData.chuva_ult && stationData.chuva_ult) {
+        stationData.chuva_ult.items.forEach(item => {
+          const periodKey = item["'soma_ult_leituras'"];
+          if (selectedRainSummary[periodKey]) {
+            const periodLabel = mapPeriodLabel(periodKey);
+            flattened.push({
+              category: 'Resumo chuvas',
+              stationCode,
+              period: periodLabel,
+              sum_chuva: item.sum_chuva
+            });
+          }
+        });
+      }
+    });
+    return flattened;
+  };
+  
+  export const replaceColumnNames = (data, labelMap) => {
+    if (data.length === 0) return data;
+  
+    const newHeaders = Object.keys(data[0]).map(header => labelMap[header] || header);
+    const newData = data.map(row => {
+      return Object.keys(row).reduce((acc, key) => {
+        acc[labelMap[key] || key] = row[key];
+        return acc;
+      }, {});
+    });
+  
+    return [newHeaders, ...newData.map(row => Object.values(row))];
+  };
+  
+  export const setColumnWidths = (worksheet, data) => {
+    const objectMaxLength = [];
+    for (let i = 0; i < data.length; i++) {
+      const value = Object.values(data[i]);
+      for (let j = 0; j < value.length; j++) {
+        objectMaxLength[j] = Math.max(objectMaxLength[j] || 0, safeToString(value[j]).length);
+      }
+    }
+    worksheet['!cols'] = objectMaxLength.map(width => ({ wch: width + 2 }));
+  };
+  
