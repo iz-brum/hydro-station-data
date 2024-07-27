@@ -7,7 +7,7 @@ import './css/DataInputPage.css';
 import Popup from './Popup';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { detailLabels, mapPeriodLabel, safeToString } from '../utils/utils';
+import { detailLabels, hydroDataLabels, safeToString, rainSummaryLabels, mapPeriodLabel, flattenData, replaceColumnNames, setColumnWidths } from '../utils/utils';
 import { useLoading } from '../context/LoadingContext';
 import PreviewModal from './PreviewModal';
 
@@ -65,7 +65,7 @@ const DataInputPage = () => {
 
   useEffect(() => {
     const allRainKeys = [
-      'soma_ult_leituras', // As chaves devem incluir as aspas simples extras
+      'soma_ult_leituras',
       "ultimos 7d",
       "ultimos 30d",
       "ultimos 12 meses"
@@ -92,6 +92,7 @@ const DataInputPage = () => {
     setSelectedHydro24h(initialSelectedHydro24h);
   }, []);
 
+
   const fetchData = async () => {
     if (!codes) {
       setPopupMessage('Por favor, digite os códigos das estações.');
@@ -99,14 +100,12 @@ const DataInputPage = () => {
       return null;
     }
 
-    if (selectedData.detalhes && !Object.values(selectedDetails).some(v => v)) {
-      setPopupMessage('Por favor, selecione pelo menos um detalhe.');
-      setShowPopup(true);
-      return null;
-    }
+    const noDetailsSelected = selectedData.detalhes && !Object.values(selectedDetails).some(v => v);
+    const noRainSummarySelected = selectedData.chuva_ult && !Object.values(selectedRainSummary).some(v => v);
+    const noHydro24hSelected = selectedData.hidro_24h && !Object.values(selectedHydro24h).some(v => v);
 
-    if (selectedData.chuva_ult && !Object.values(selectedRainSummary).some(v => v)) {
-      setPopupMessage('Por favor, selecione pelo menos um período de chuva.');
+    if (noDetailsSelected && noRainSummarySelected && noHydro24hSelected) {
+      setPopupMessage('Por favor, selecione pelo menos um filtro em uma das categorias.');
       setShowPopup(true);
       return null;
     }
@@ -210,7 +209,6 @@ const DataInputPage = () => {
         filteredData[code].chuva_ult = {
           items: fetchedData[code].chuva_ult.items.filter((item) => {
             const periodKey = item["'soma_ult_leituras'"];
-            // const periodLabel = mapPeriodLabel(periodKey);
             return selectedRainSummary[periodKey];
           })
         };
@@ -259,7 +257,7 @@ const DataInputPage = () => {
             }
             return acc;
           }, {});
-          flattened.push({ stationCode, category: 'Hidro 24h', ...filteredItem });
+          flattened.push({ category: 'Hidro 24h', stationCode, ...filteredItem });
         });
       }
       if (selectedData.chuva_ult && stationData.chuva_ult) {
@@ -268,7 +266,7 @@ const DataInputPage = () => {
           if (selectedRainSummary[periodKey]) {
             const periodLabel = mapPeriodLabel(periodKey);
             flattened.push({
-              category: 'Chuva Últ',
+              category: 'Resumo chuvas',
               stationCode,
               period: periodLabel,
               sum_chuva: item.sum_chuva
@@ -280,41 +278,81 @@ const DataInputPage = () => {
     return flattened;
   };
 
-  //OK 1/2
-  const handleDownloadData = async (format) => {
+  // Função para substituir os nomes das colunas
+  const replaceColumnNames = (data, labelMap) => {
+    if (data.length === 0) return data;
+
+    const newHeaders = Object.keys(data[0]).map(header => labelMap[header] || header);
+    const newData = data.map(row => {
+      return Object.keys(row).reduce((acc, key) => {
+        acc[labelMap[key] || key] = row[key];
+        return acc;
+      }, {});
+    });
+
+    return [newHeaders, ...newData.map(row => Object.values(row))];
+  };
+
+  const handleDownloadData = async () => {
     const fetchedData = await fetchData();
     if (!fetchedData) return;
-
-    const detalhesData = flattenData(fetchedData).filter(d => d.category === 'Detalhes');
-    const hidro24hData = flattenData(fetchedData).filter(d => d.category === 'Hidro 24h');
-    const chuvaUltData = flattenData(fetchedData).filter(d => d.category === 'Chuva Últ');
-
+  
+    const flattenedData = flattenData(fetchedData, selectedData, selectedDetails, selectedHydro24h, selectedRainSummary);
+  
+    const labelMap = {
+      stationCode: 'Código',
+      period: 'Período',
+      data: 'Data',
+      chuva: 'Chuva',
+      nivel: 'Nível (cm)',
+      vazao: 'Vazão (m³/s)',
+      sum_chuva: 'Soma da Chuva (mm)',
+      nome: 'Nome',
+      // Adicione outros mapeamentos conforme necessário
+    };
+  
     const workbook = XLSX.utils.book_new();
-
-    if (detalhesData.length > 0) {
-      const detalhesWorksheet = XLSX.utils.json_to_sheet(detalhesData);
-      setColumnWidths(detalhesWorksheet, detalhesData);
-      XLSX.utils.book_append_sheet(workbook, detalhesWorksheet, 'Detalhes');
+  
+    // Filtrando apenas os dados que foram selecionados e aparecem em DataView e PreviewModal
+    const detailsData = flattenedData.filter(d => d.category === 'Detalhes');
+    if (detailsData.length > 0 && Object.valu es(selectedDetails).some(v => v)) {
+      const detailsDataWithHeaders = replaceColumnNames(detailsData, labelMap);
+      const detailsWorksheet = XLSX.utils.aoa_to_sheet(detailsDataWithHeaders);
+      setColumnWidths(detailsWorksheet, detailsData);
+      XLSX.utils.book_append_sheet(workbook, detailsWorksheet, 'Detalhes');
     }
-
-    if (hidro24hData.length > 0) {
-      const hidro24hWorksheet = XLSX.utils.json_to_sheet(hidro24hData);
-      setColumnWidths(hidro24hWorksheet, hidro24hData);
-      XLSX.utils.book_append_sheet(workbook, hidro24hWorksheet, 'Hidro 24h');
+  
+    const hydro24hData = flattenedData.filter(d => d.category === 'Hidro 24h');
+    if (hydro24hData.length > 0 && Object.values(selectedHydro24h).some(v => v)) {
+      const hydro24hDataWithHeaders = replaceColumnNames(hydro24hData, labelMap);
+      const hydro24hWorksheet = XLSX.utils.aoa_to_sheet(hydro24hDataWithHeaders);
+      setColumnWidths(hydro24hWorksheet, hydro24hData);
+      XLSX.utils.book_append_sheet(workbook, hydro24hWorksheet, 'Hidro 24h');
     }
-
-    if (chuvaUltData.length > 0) {
-      const chuvaUltWorksheet = XLSX.utils.json_to_sheet(chuvaUltData);
-      setColumnWidths(chuvaUltWorksheet, chuvaUltData);
-      XLSX.utils.book_append_sheet(workbook, chuvaUltWorksheet, 'Chuva Últ');
+  
+    const rainSummaryData = flattenedData.filter(d => d.category === 'Resumo chuvas');
+    if (rainSummaryData.length > 0 && Object.values(selectedRainSummary).some(v => v)) {
+      const rainSummaryDataWithHeaders = replaceColumnNames(rainSummaryData, labelMap);
+      const rainSummaryWorksheet = XLSX.utils.aoa_to_sheet(rainSummaryDataWithHeaders);
+      setColumnWidths(rainSummaryWorksheet, rainSummaryData);
+      XLSX.utils.book_append_sheet(workbook, rainSummaryWorksheet, 'Resumo chuvas');
     }
-
+  
+    if (workbook.SheetNames.length === 0) {
+      console.warn("Nenhuma categoria de dados selecionada para download.");
+      setLoading(false);
+      return;
+    }
+  
     const xlsxData = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([xlsxData], { type: 'application/octet-stream' });
     saveAs(blob, 'hydro_station_data.xlsx');
-
+  
     setLoading(false);
   };
+  
+
+
 
   const setColumnWidths = (worksheet, data) => {
     const objectMaxLength = [];
@@ -465,7 +503,7 @@ const DataInputPage = () => {
                       checked={selectedRainSummary[key]}
                       onChange={handleRainSummaryCheckboxChange}
                     />
-                    {key}
+                    {rainSummaryLabels[key] || key}
                   </label>
                 ))}
               </div>
@@ -491,7 +529,7 @@ const DataInputPage = () => {
                       checked={selectedHydro24h[key]}
                       onChange={handleHydro24hCheckboxChange}
                     />
-                    {key}
+                    {hydroDataLabels[key]}
                   </label>
                 ))}
               </div>
