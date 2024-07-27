@@ -2,6 +2,7 @@
   "name": "hydro-station-data",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://iz-brum.github.io/hydro-station-data",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -16,6 +17,7 @@
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "gapi-script": "^1.2.0",
+    "gh-pages": "^6.1.1",
     "googleapis": "^140.0.1",
     "https-browserify": "^1.0.0",
     "json2csv": "^6.0.0-alpha.2",
@@ -39,7 +41,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
