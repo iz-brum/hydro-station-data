@@ -315,7 +315,7 @@ const DataInputPage = () => {
   
     // Filtrando apenas os dados que foram selecionados e aparecem em DataView e PreviewModal
     const detailsData = flattenedData.filter(d => d.category === 'Detalhes');
-    if (detailsData.length > 0 && Object.valu es(selectedDetails).some(v => v)) {
+    if (detailsData.length > 0 && Object.values(selectedDetails).some(v => v)) {
       const detailsDataWithHeaders = replaceColumnNames(detailsData, labelMap);
       const detailsWorksheet = XLSX.utils.aoa_to_sheet(detailsDataWithHeaders);
       setColumnWidths(detailsWorksheet, detailsData);
