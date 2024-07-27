@@ -1,19 +1,18 @@
-// hydro-station-data/src/components/DataView.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/DataView.css';
-import { detailLabels, formatNumber, formatDate } from '../utils/utils';
+import { detailLabels, formatNumber, formatDate , rainSummaryLabels } from '../utils/utils';
 
 const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selectedHydro24h }) => {
-    // console.log('Dados recebidos pelo DataView:', data); 
 
     const navigate = useNavigate();
 
     const renderHydroData = (hydroData, stationCode, stationName) => {
-        const dataToShow = hydroData.slice(0, 5); // Exibir apenas os primeiros 5 registros
+        if (!selectedHydro24h || !Object.values(selectedHydro24h).some(v => v)) return null;
+
+        const dataToShow = hydroData.slice(0, 5);
         if (!hydroData || hydroData.length === 0) return null;
-        
+
         return (
             <div>
                 <h5>Dados Hidrométricos 24h</h5>
@@ -48,10 +47,9 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
     };
 
     const renderRainSummary = (rainSummary, stationCode) => {
+        if (!selectedRainSummary || !Object.values(selectedRainSummary).some(v => v)) return null;
         if (!rainSummary || rainSummary.length === 0) return null;
-    
-        console.log(`Resumo de chuva para a estação ${stationCode}:`, rainSummary); // Adicione isto
-    
+
         return (
             <div>
                 <h5>Resumo de Chuva</h5>
@@ -67,10 +65,43 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
                             .filter(item => selectedRainSummary[item["'soma_ult_leituras'"]])
                             .map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item["'soma_ult_leituras'"]}</td>
+                                    <td>{rainSummaryLabels[item["'soma_ult_leituras'"]] || item["'soma_ult_leituras'"]}</td>
                                     <td style={{ textAlign: 'center' }}>{formatNumber(item.sum_chuva)}</td>
                                 </tr>
                             ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+
+    const renderDetails = (stationCode, stationData) => {
+        if (!selectedDetails || !Object.values(selectedDetails).some(v => v)) return null;
+
+        return (
+            <div>
+                <h5>Detalhes</h5>
+                <table>
+                    <colgroup>
+                        <col style={{ width: '155px' }} />
+                        <col style={{ width: 'auto' }} />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Chave</th>
+                            <th style={{ textAlign: 'center' }}>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.keys(stationData.detalhes.items[0]).map((key) => (
+                            selectedDetails[key] && (
+                                <tr key={key}>
+                                    <td>{detailLabels[key]}</td>
+                                    <td style={{ textAlign: 'center' }}>{stationData.detalhes.items[0][key]}</td>
+                                </tr>
+                            )
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -85,35 +116,9 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
                 <div className="station-card" key={stationCode}>
                     <h4>Estação {stationCode}</h4>
                     <p style={{ marginBottom: '-5px ' }}>{data[stationCode].nome || 'Nome não disponível'}</p>
-                    {data[stationCode].detalhes && (
-                        <div>
-                            <h5>Detalhes</h5>
-                            <table>
-                                <colgroup>
-                                    <col style={{ width: '155px' }} />
-                                    <col style={{ width: 'auto' }} />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Chave</th>
-                                        <th style={{ textAlign: 'center' }}>Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {Object.keys(data[stationCode].detalhes.items[0]).map((key) => (
-                                        selectedDetails[key] && (
-                                            <tr key={key}>
-                                                <td>{detailLabels[key]}</td>
-                                                <td style={{ textAlign: 'center' }}>{data[stationCode].detalhes.items[0][key]}</td>
-                                            </tr>
-                                        )
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                    {data[stationCode].hidro_24h && renderHydroData(data[stationCode].hidro_24h.items, stationCode, data[stationCode].nome)}
-                    {data[stationCode].chuva_ult && renderRainSummary(data[stationCode].chuva_ult.items, stationCode)}
+                    {renderDetails(stationCode, data[stationCode])}
+                    {renderHydroData(data[stationCode].hidro_24h.items, stationCode, data[stationCode].nome)}
+                    {renderRainSummary(data[stationCode].chuva_ult.items, stationCode)}
                 </div>
             ))}
         </div>
