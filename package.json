@@ -2,7 +2,7 @@
   "name": "hydro-station-data",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://iz-brum.github.io/hydro-station-data/",
+  "homepage": "https://iz-brum.github.io/hydro-station-data",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
