@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# 🌊 Hydro Station Data
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+O **Hydro Station Data** é um projeto dedicado a fornecer informações detalhadas sobre condições hidrológicas e meteorológicas, utilizando dados coletados pela Rede Hidrometeorológica Nacional (RHN). Este projeto é essencial para o monitoramento de estações hidrológicas e meteorológicas, oferecendo dados sobre precipitação, níveis de água e outros parâmetros cruciais para a gestão de recursos hídricos.
 
-## Available Scripts
+## 🚀 Funcionalidades
 
-In the project directory, you can run:
+- **Pesquisa de Estações**: Pesquise e filtre estações hidrológicas e meteorológicas utilizando diversos critérios.
+- **Visualização de Dados**: Acesse visualizações detalhadas de dados sobre chuvas, níveis de água e outras medições hidrológicas.
+- **Download de Dados**: Baixe os dados selecionados em formatos acessíveis como XLSX.
+- **Visualização de Histórico**: Acesse dados históricos de precipitação e níveis de água de várias estações.
+- **Interface Amigável**: Navegação intuitiva e design moderno para uma experiência de usuário agradável.
 
-### `npm start`
+## 📦 Estrutura do Projeto
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+hydro-station-data/
+├── public/              # Arquivos públicos como index.html
+├── src/
+│   ├── api/             # Serviços de API
+│   ├── components/      # Componentes React
+│   ├── context/         # Contextos globais (e.g., LoadingContext)
+│   ├── utils/           # Utilitários e funções auxiliares
+│   ├── App.js           # Componente principal da aplicação
+│   ├── index.js         # Ponto de entrada da aplicação
+│   └── styles.css       # Estilos globais
+├── .gitignore           # Arquivos a serem ignorados pelo Git
+├── package.json         # Dependências do projeto
+└── README.md            # Documentação do projeto
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🔧 Instalação e Configuração
 
-### `npm test`
+### Pré-requisitos
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Node.js** (versão 14 ou superior)
+- **npm** ou **yarn**
 
-### `npm run build`
+### Passos para Instalação
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone o repositório:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   git clone https://github.com/seu-usuario/hydro-station-data.git
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Navegue até o diretório do projeto:**
 
-### `npm run eject`
+   ```bash
+   cd hydro-station-data
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. **Instale as dependências:**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Inicie o servidor de desenvolvimento:**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   npm start
+   # ou
+   yarn start
+   ```
 
-## Learn More
+5. **Acesse o aplicativo:**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   Abra [http://localhost:3000](http://localhost:3000) no seu navegador para visualizar o projeto em execução.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🧩 Componentes Principais
 
-### Code Splitting
+- **App.js**: Componente principal que configura as rotas e o contexto de carregamento.
+- **HomePage**: Página inicial com informações sobre o aplicativo.
+- **DataInputPage**: Página para pesquisa e filtragem de estações.
+- **AllHydroDataPage**: Página para visualização de todos os dados hidrométricos.
+- **StationDetailsPage**: Detalhes de uma estação específica, incluindo dados históricos e medições atuais.
+- **PreviewModal**: Modal para pré-visualização dos dados antes do download.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🤝 Contribuições
 
-### Analyzing the Bundle Size
+Contribuições são sempre bem-vindas! Siga os passos abaixo para contribuir:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Fork o repositório**.
+2. **Crie uma nova branch** (`git checkout -b feature/nova-feature`).
+3. **Faça suas alterações**.
+4. **Commit suas alterações** (`git commit -m 'Adiciona nova funcionalidade'`).
+5. **Push para a branch** (`git push origin feature/nova-feature`).
+6. **Abra um Pull Request**.
 
-### Making a Progressive Web App
+## 📜 Licença
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Este projeto é licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-### Advanced Configuration
+## 💡 Agradecimentos
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Agência Nacional de Águas (ANA)** pela disponibilização dos dados.
+- **React** por fornecer o framework para a interface de usuário.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+*Este projeto não é afiliado oficialmente com o aplicativo HydroWeb Mobile ou com a Agência Nacional de Águas (ANA). Ele utiliza dados públicos para fins informativos e educacionais.*
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 🚀 Contribuidores
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/iz-brum">
+        <img src="https://avatars.githubusercontent.com/u/142345565?s=48&v=4" width="100px;" alt="IZANN BRUM"/><br />
+        <sub><b>IZANN BRUM</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+---
