@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import DataInputPage from './components/DataInputPage';
 import AllHydroDataPage from './components/AllHydroDataPage';
@@ -11,7 +11,7 @@ import './App.css';
 const App = () => {
   return (
     <LoadingProvider>
-      <Router basename="/">
+      <Router basename="/hydro-station-data">
         <nav>
           <ul>
             <li><Link to="/">INÍCIO</Link></li>
