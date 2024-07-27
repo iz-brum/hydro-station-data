@@ -14,12 +14,12 @@ const App = () => {
       <Router>
         <nav>
           <ul>
-            <li><Link to="/">INÍCIO</Link></li>
+            <li><Link to="/hydroHome">INÍCIO</Link></li>
             <li><Link to="/data-input">PESQUISAR ESTAÇÕES</Link></li>
           </ul>
         </nav>
         <Routes>
-          <Route path="/" exact element={<HomePage />} />
+          <Route path="/hydroHome" exact element={<HomePage />} />
           <Route path="/data-input" element={<DataInputPage />} />
           <Route path="/all-hydro-data" element={<AllHydroDataPage />} />
           <Route path="/station-details" element={<StationDetailsPage />} />
