@@ -7,7 +7,7 @@ import './css/DataInputPage.css';
 import Popup from './Popup';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { detailLabels, hydroDataLabels, safeToString, rainSummaryLabels, mapPeriodLabel, flattenData, replaceColumnNames, setColumnWidths } from '../utils/utils';
+import { detailLabels, hydroDataLabels, rainSummaryLabels, mapPeriodLabel, replaceColumnNames, setColumnWidths } from '../utils/utils';
 import { useLoading } from '../context/LoadingContext';
 import PreviewModal from './PreviewModal';
 
@@ -15,7 +15,7 @@ const DataInputPage = () => {
   const { setLoading } = useLoading();
   const [codes, setCodes] = useState(localStorage.getItem('codes') || '');
   const [data, setData] = useState(JSON.parse(localStorage.getItem('data')) || null);
-  const [selectedData, setSelectedData] = useState(JSON.parse(localStorage.getItem('selectedData')) || {
+  const [selectedData] = useState(JSON.parse(localStorage.getItem('selectedData')) || {
     detalhes: true,
     hidro_24h: true,
     chuva_ult: true,
@@ -29,6 +29,12 @@ const DataInputPage = () => {
   const [selectedHydro24h, setSelectedHydro24h] = useState(JSON.parse(localStorage.getItem('selectedHydro24h')) || {});
 
   const memoizedData = {};
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 650);
+    return () => clearTimeout(timer);
+  }, [setLoading]);
 
   useEffect(() => {
     localStorage.setItem('codes', codes);
@@ -53,44 +59,6 @@ const DataInputPage = () => {
   useEffect(() => {
     localStorage.setItem('selectedHydro24h', JSON.stringify(selectedHydro24h));
   }, [selectedHydro24h]);
-
-  useEffect(() => {
-    const allDetailKeys = Object.keys(detailLabels);
-    const initialSelectedDetails = allDetailKeys.reduce((acc, key) => {
-      acc[key] = selectedDetails[key] || false;
-      return acc;
-    }, {});
-    setSelectedDetails(initialSelectedDetails);
-  }, []);
-
-  useEffect(() => {
-    const allRainKeys = [
-      'soma_ult_leituras',
-      "ultimos 7d",
-      "ultimos 30d",
-      "ultimos 12 meses"
-    ];
-    const initialSelectedRainSummary = allRainKeys.reduce((acc, key) => {
-      acc[key] = selectedRainSummary[key] || false;
-      return acc;
-    }, {});
-    setSelectedRainSummary(initialSelectedRainSummary);
-  }, []);
-
-
-  useEffect(() => {
-    const allHydro24hKeys = [
-      "data",
-      "chuva",
-      "nivel",
-      "vazao"
-    ];
-    const initialSelectedHydro24h = allHydro24hKeys.reduce((acc, key) => {
-      acc[key] = selectedHydro24h[key] || false;
-      return acc;
-    }, {});
-    setSelectedHydro24h(initialSelectedHydro24h);
-  }, []);
 
 
   const fetchData = async () => {
@@ -278,20 +246,6 @@ const DataInputPage = () => {
     return flattened;
   };
 
-  // Função para substituir os nomes das colunas
-  const replaceColumnNames = (data, labelMap) => {
-    if (data.length === 0) return data;
-
-    const newHeaders = Object.keys(data[0]).map(header => labelMap[header] || header);
-    const newData = data.map(row => {
-      return Object.keys(row).reduce((acc, key) => {
-        acc[labelMap[key] || key] = row[key];
-        return acc;
-      }, {});
-    });
-
-    return [newHeaders, ...newData.map(row => Object.values(row))];
-  };
 
   const handleDownloadData = async () => {
     const fetchedData = await fetchData();
@@ -351,27 +305,6 @@ const DataInputPage = () => {
     setLoading(false);
   };
   
-
-
-
-  const setColumnWidths = (worksheet, data) => {
-    const objectMaxLength = [];
-    for (let i = 0; i < data.length; i++) {
-      const value = Object.values(data[i]);
-      for (let j = 0; j < value.length; j++) {
-        objectMaxLength[j] = Math.max(objectMaxLength[j] || 0, safeToString(value[j]).length);
-      }
-    }
-    worksheet['!cols'] = objectMaxLength.map(width => ({ wch: width + 2 }));
-  };
-
-
-  const handleCheckboxChange = (e) => {
-    setSelectedData({
-      ...selectedData,
-      [e.target.name]: e.target.checked,
-    });
-  };
 
   const handleDetailsCheckboxChange = (e) => {
     setSelectedDetails({
@@ -446,7 +379,7 @@ const DataInputPage = () => {
 
   return (
     <div className="container">
-      <h2>Página de Entrada de Dados</h2>
+      <h2>Painel de Controle de Dados</h2>
       <label className='list-stations'>
         Lista de códigos de estações:
       </label>
