@@ -1,16 +1,16 @@
 /* HomePage */
 .home-container {
     padding: 20px;
-    background-color: #2C2C2C; /* Fundo cinza escuro */
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #2C2C2C;
 }
 
 .home-header {
     background-color: #1E1E1E;
     color: #FFFFFF;
-    padding: 50px 20px;
+    padding: 15px 30px;
+    text-align: center;
+    width: 85%;
+    margin: auto;
 }
 
 .home-header h1 {
@@ -27,19 +27,29 @@
     padding: 2rem;
     margin: 2rem auto;
     border-radius: 10px;
-    max-width: 80%;
+    max-width: 85%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.home-section {
+    margin-bottom: 1.5rem;
 }
 
 .home-section h3 {
     color: #FFD700;
+    font-size: 1.3rem;
 }
 
-.home-section p {
+.home-section p, .home-section ul {
     text-align: justify;
     line-height: 1.8;
-    font-size: 1.2rem;
-    color: #1a1616;
+    font-size: 1.3rem;
+    color: #E0E0E0;
+}
+
+.home-section ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
 }
 
 .home-section a {
@@ -48,7 +58,7 @@
     padding: 0.5rem 1rem;
     border: 2px solid #FFD700;
     border-radius: 5px;
-    color: #e7c606;
+    color: #FFD700;
     font-weight: bold;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
