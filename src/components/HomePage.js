@@ -1,3 +1,5 @@
+// src/components/HomePage.js
+
 import React, { useEffect } from 'react';
 import './css/HomePage.css';
 import { useLoading } from '../context/LoadingContext';
