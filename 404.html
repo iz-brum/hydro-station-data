@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -18,7 +18,7 @@
             background-color: #f4f4f4;
         }
 
-        .noscript-message {
+        .redirect-message {
             font-size: 18px;
             color: #333;
         }
@@ -26,14 +26,14 @@
 </head>
 
 <body>
-    <noscript>
-        <div class="noscript-message">
-            <h1>JavaScript Desativado</h1>
-            <p>Este aplicativo requer JavaScript para funcionar corretamente. Por favor, habilite o JavaScript em seu
-                navegador e recarregue a página.</p>
-        </div>
-    </noscript>
-    <div id="root"></div>
+    <div class="redirect-message">
+        <h1>Redirecionando...</h1>
+        <p>Você será redirecionado para a página inicial do aplicativo.</p>
+    </div>
+    <script type="text/javascript">
+        var pathname = window.location.pathname.split('/');
+        window.location.href = '/' + pathname[pathname.length - 2] + '/index.html' + window.location.hash;
+    </script>
 </body>
 
 </html>
