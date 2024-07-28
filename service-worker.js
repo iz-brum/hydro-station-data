@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/hydro-station-data/precache-manifest.a91c12fe85f23a7364628401a96443db.js"
+  "/hydro-station-data/precache-manifest.63e363f9e3255da1063194906558b648.js"
 );
 
 self.addEventListener('message', (event) => {
