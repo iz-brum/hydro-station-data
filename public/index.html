@@ -16,17 +16,14 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <script>
-    // Detecta se o site está sendo executado no GitHub Pages ou localmente
-    const isGithubPages = window.location.hostname === "iz-brum.github.io";
-    const basePath = isGithubPages ? "/hydro-station-data" : "";
-
-    // Redireciona para a rota correta, seja no GitHub Pages ou localmente
-    if (window.location.pathname.startsWith(basePath)) {
-      var newPath = window.location.pathname.replace(basePath, "");
-      window.history.replaceState({}, document.title, basePath + newPath);
-    } else if (window.location.pathname === "/") {
-      window.history.replaceState({}, document.title, basePath + "/");
-    }
+    // Definir basename para GitHub Pages
+    (function () {
+      if (window.location.hostname === "iz-brum.github.io") {
+        var baseTag = document.createElement('base');
+        baseTag.href = "/hydro-station-data/";
+        document.getElementsByTagName('head')[0].appendChild(baseTag);
+      }
+    })();
   </script>
 </body>
 

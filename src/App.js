@@ -9,9 +9,12 @@ import Loading from './components/Loading/Loading';
 import './App.css';
 
 const App = () => {
+
+  const basename = process.env.NODE_ENV === 'development' ? '' : '/hydro-station-data';
+
   return (
     <LoadingProvider>
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router basename={basename}>
         <nav>
           <ul>
             <li><Link to="/">INÍCIO</Link></li>
