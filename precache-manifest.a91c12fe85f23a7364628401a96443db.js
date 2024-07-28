@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "745b41ba8bdf0b382c5e31e5edd23b3e",
+    "revision": "5a27a90c224d0ca0b7ebae08ff7dccbd",
     "url": "/hydro-station-data/index.html"
   },
   {
-    "revision": "cfdc637053408f9d6e68",
+    "revision": "d24f06729f71f70c7ca4",
     "url": "/hydro-station-data/static/css/main.9711150a.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hydro-station-data/static/js/2.b92849ed.chunk.js"
   },
   {
-    "revision": "cfdc637053408f9d6e68",
-    "url": "/hydro-station-data/static/js/main.a71f338b.chunk.js"
+    "revision": "d24f06729f71f70c7ca4",
+    "url": "/hydro-station-data/static/js/main.482b7d57.chunk.js"
   },
   {
     "revision": "b485674baeedc7295502",
