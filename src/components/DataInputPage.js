@@ -13,21 +13,51 @@ import PreviewModal from './PreviewModal';
 
 const DataInputPage = () => {
   const { setLoading } = useLoading();
+
   const [codes, setCodes] = useState(localStorage.getItem('codes') || '');
   const [data, setData] = useState(JSON.parse(localStorage.getItem('data')) || null);
+
   const [selectedData] = useState(JSON.parse(localStorage.getItem('selectedData')) || {
     detalhes: true,
     hidro_24h: true,
     chuva_ult: true,
   });
-  const [selectedDetails, setSelectedDetails] = useState(JSON.parse(localStorage.getItem('selectedDetails')) || {});
+
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
+
   const [showPreview, setShowPreview] = useState(false);
   const [previewData, setPreviewData] = useState([]);
-  const [selectedRainSummary, setSelectedRainSummary] = useState(JSON.parse(localStorage.getItem('selectedRainSummary')) || {});
-  const [selectedHydro24h, setSelectedHydro24h] = useState(JSON.parse(localStorage.getItem('selectedHydro24h')) || {});
 
+  const initialDetails = Object.keys(detailLabels).reduce((acc, key) => {
+    acc[key] = true; // Define todos os filtros como true
+    return acc;
+  }, {});
+
+  const initialRainSummary = Object.keys(rainSummaryLabels).reduce((acc, key) => {
+    acc[key] = true; // Define todos os filtros como true
+    return acc;
+  }, {});
+
+  const initialHydro24h = Object.keys(hydroDataLabels).reduce((acc, key) => {
+    acc[key] = true; // Define todos os filtros como true
+    return acc;
+  }, {});
+
+  const [selectedDetails, setSelectedDetails] = useState(
+    JSON.parse(localStorage.getItem('selectedDetails')) || initialDetails
+  );
+
+  const [selectedRainSummary, setSelectedRainSummary] = useState(
+    JSON.parse(localStorage.getItem('selectedRainSummary')) || initialRainSummary
+  );
+
+  const [selectedHydro24h, setSelectedHydro24h] = useState(
+    JSON.parse(localStorage.getItem('selectedHydro24h')) || initialHydro24h
+  );
+
+
+  // Memoized data for caching
   const memoizedData = {};
 
   useEffect(() => {
@@ -250,9 +280,9 @@ const DataInputPage = () => {
   const handleDownloadData = async () => {
     const fetchedData = await fetchData();
     if (!fetchedData) return;
-  
+
     const flattenedData = flattenData(fetchedData, selectedData, selectedDetails, selectedHydro24h, selectedRainSummary);
-  
+
     const labelMap = {
       stationCode: 'Código',
       period: 'Período',
@@ -264,9 +294,9 @@ const DataInputPage = () => {
       nome: 'Nome',
       // Adicione outros mapeamentos conforme necessário
     };
-  
+
     const workbook = XLSX.utils.book_new();
-  
+
     // Filtrando apenas os dados que foram selecionados e aparecem em DataView e PreviewModal
     const detailsData = flattenedData.filter(d => d.category === 'Detalhes');
     if (detailsData.length > 0 && Object.values(selectedDetails).some(v => v)) {
@@ -275,7 +305,7 @@ const DataInputPage = () => {
       setColumnWidths(detailsWorksheet, detailsData);
       XLSX.utils.book_append_sheet(workbook, detailsWorksheet, 'Detalhes');
     }
-  
+
     const hydro24hData = flattenedData.filter(d => d.category === 'Hidro 24h');
     if (hydro24hData.length > 0 && Object.values(selectedHydro24h).some(v => v)) {
       const hydro24hDataWithHeaders = replaceColumnNames(hydro24hData, labelMap);
@@ -283,7 +313,7 @@ const DataInputPage = () => {
       setColumnWidths(hydro24hWorksheet, hydro24hData);
       XLSX.utils.book_append_sheet(workbook, hydro24hWorksheet, 'Hidro 24h');
     }
-  
+
     const rainSummaryData = flattenedData.filter(d => d.category === 'Resumo chuvas');
     if (rainSummaryData.length > 0 && Object.values(selectedRainSummary).some(v => v)) {
       const rainSummaryDataWithHeaders = replaceColumnNames(rainSummaryData, labelMap);
@@ -291,20 +321,20 @@ const DataInputPage = () => {
       setColumnWidths(rainSummaryWorksheet, rainSummaryData);
       XLSX.utils.book_append_sheet(workbook, rainSummaryWorksheet, 'Resumo chuvas');
     }
-  
+
     if (workbook.SheetNames.length === 0) {
       console.warn("Nenhuma categoria de dados selecionada para download.");
       setLoading(false);
       return;
     }
-  
+
     const xlsxData = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([xlsxData], { type: 'application/octet-stream' });
     saveAs(blob, 'hydro_station_data.xlsx');
-  
+
     setLoading(false);
   };
-  
+
 
   const handleDetailsCheckboxChange = (e) => {
     setSelectedDetails({
