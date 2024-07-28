@@ -18,13 +18,13 @@
     <div id="root"></div>
     <script>
       // Redirecionamento para a URL base correta
-      if (window.location.pathname.startsWith("/hydro-station-data")) {
+      if (window.location.pathname.startsWith("/")) {
         // Rota específica no projeto
-        var newPath = window.location.pathname.replace("/hydro-station-data", "");
-        window.history.replaceState({}, document.title, "/hydro-station-data" + newPath);
+        var newPath = window.location.pathname.replace("/", "");
+        window.history.replaceState({}, document.title, "/" + newPath);
       } else {
         // Acesso à raiz ou caminho incorreto
-        window.history.replaceState({}, document.title, "/hydro-station-data");
+        window.history.replaceState({}, document.title, "/");
       }
     </script>
   </body>
