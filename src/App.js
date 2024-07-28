@@ -11,7 +11,7 @@ import './App.css';
 const App = () => {
   return (
     <LoadingProvider>
-      <Router basename="/hydro-station-data">
+      <Router basename={process.env.PUBLIC_URL}>
         <nav>
           <ul>
             <li><Link to="/">INÍCIO</Link></li>
