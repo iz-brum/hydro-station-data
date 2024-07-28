@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <title>React App</title>
-</head>
-
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-  <script>
-    // Detecta se o site está sendo executado no GitHub Pages ou localmente
-    const isGithubPages = window.location.hostname === "iz-brum.github.io";
-    const basePath = isGithubPages ? "/hydro-station-data" : "";
-
-    // Redireciona para a rota correta, seja no GitHub Pages ou localmente
-    if (window.location.pathname.startsWith(basePath)) {
-      var newPath = window.location.pathname.replace(basePath, "");
-      window.history.replaceState({}, document.title, basePath + newPath);
-    } else if (window.location.pathname === "/") {
-      window.history.replaceState({}, document.title, basePath + "/");
-    }
-  </script>
-</body>
-
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      // Redirecionamento para a URL base correta no GitHub Pages
+      var redirectTo = function() {
+        var pathSegments = window.location.pathname.split('/');
+        if (pathSegments.length > 2) {
+          window.location.href = '/hydro-station-data/' + pathSegments.slice(2).join('/');
+        }
+      };
+      if (window.location.hostname === 'iz-brum.github.io') {
+        redirectTo();
+      }
+    </script>
+  </body>
 </html>
