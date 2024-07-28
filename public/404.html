@@ -2,15 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL=./index.html">
-    <script type="text/javascript">
-        var pathname = window.location.pathname.split('/');
-        window.location.href = '/' + pathname[pathname.length - 2] + '/index.html' + window.location.hash;
-    </script>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f4f4f4;
+        }
+
+        .noscript-message {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>
+    <noscript>
+        <div class="noscript-message">
+            <h1>JavaScript Desativado</h1>
+            <p>Este aplicativo requer JavaScript para funcionar corretamente. Por favor, habilite o JavaScript em seu
+                navegador e recarregue a página.</p>
+        </div>
+    </noscript>
+    <div id="root"></div>
 </body>
 
 </html>
