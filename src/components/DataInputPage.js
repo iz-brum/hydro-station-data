@@ -97,30 +97,30 @@ const DataInputPage = () => {
       setShowPopup(true);
       return null;
     }
-
+  
     const noDetailsSelected = selectedData.detalhes && !Object.values(selectedDetails).some(v => v);
     const noRainSummarySelected = selectedData.chuva_ult && !Object.values(selectedRainSummary).some(v => v);
     const noHydro24hSelected = selectedData.hidro_24h && !Object.values(selectedHydro24h).some(v => v);
-
+  
     if (noDetailsSelected && noRainSummarySelected && noHydro24hSelected) {
       setPopupMessage('Por favor, selecione pelo menos um filtro em uma das categorias.');
       setShowPopup(true);
       return null;
     }
-
+  
     setLoading(true);
-    const codesArray = codes.split(',').map(code => code.trim()).filter(code => code !== '');
+    const codesArray = codes.split(',').map(code => code.trim()).filter(code => code);
     const fetchedData = {};
-    let invalidCodes = [];
-
+    const invalidCodes = new Set();
+  
     const requests = codesArray.map(async (code) => {
       if (memoizedData[code]) {
         fetchedData[code] = memoizedData[code];
         return;
       }
-
+  
       fetchedData[code] = {};
-
+  
       try {
         const details = await fetchStationDetails(code);
         if (details.data && details.data.items && details.data.items[0]) {
@@ -129,50 +129,71 @@ const DataInputPage = () => {
             fetchedData[code].detalhes = details.data;
           }
         } else {
-          invalidCodes.push(code);
+          invalidCodes.add(code);
         }
       } catch (error) {
         console.error(`Erro ao buscar detalhes da estação ${code}:`, error);
-        invalidCodes.push(code);
+        invalidCodes.add(code);
       }
-
+  
       if (selectedData.hidro_24h) {
         try {
           const hidro24h = await fetchHydro24h(code);
           if (hidro24h.data) {
             fetchedData[code].hidro_24h = hidro24h.data;
+          } else {
+            invalidCodes.add(code);
           }
         } catch (error) {
           console.error(`Erro ao buscar dados hidrométricos para a estação ${code}:`, error);
+          invalidCodes.add(code);
         }
       }
-
+  
       if (selectedData.chuva_ult) {
         try {
           const chuvaUlt = await fetchRainSummary(code);
           if (chuvaUlt.data) {
             fetchedData[code].chuva_ult = chuvaUlt.data;
+          } else {
+            invalidCodes.add(code);
           }
         } catch (error) {
           console.error(`Erro ao buscar resumo de chuva para a estação ${code}:`, error);
+          invalidCodes.add(code);
         }
       }
-
+  
       memoizedData[code] = fetchedData[code];
     });
-
+  
     await Promise.all(requests);
-
-    if (invalidCodes.length > 0) {
-      setPopupMessage(`Os seguintes códigos de estação são inválidos ou não foram encontrados: ${invalidCodes.join(', ')}`);
+  
+    // Remover estações sem dados válidos
+    const validData = {};
+    Object.keys(fetchedData).forEach(code => {
+      if (
+        fetchedData[code].detalhes ||
+        (fetchedData[code].hidro_24h && fetchedData[code].hidro_24h.items && fetchedData[code].hidro_24h.items.length > 0) ||
+        (fetchedData[code].chuva_ult && fetchedData[code].chuva_ult.items && fetchedData[code].chuva_ult.items.length > 0)
+      ) {
+        validData[code] = fetchedData[code];
+      } else {
+        invalidCodes.add(code);
+      }
+    });
+  
+    if (invalidCodes.size > 0) {
+      setPopupMessage(`Os seguintes códigos de estação são inválidos ou não possuem dados: ${[...invalidCodes].join(', ')}`);
       setShowPopup(true);
     }
-
-    // console.log('Dados completos:', fetchedData);
-    setData(fetchedData);
+  
+    setData(validData);
     setLoading(false);
-    return fetchedData;
+    return validData;
   };
+  
+
 
 
   const handleFetchData = async () => {
