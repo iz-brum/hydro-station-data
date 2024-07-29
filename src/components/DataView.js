@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/DataView.css';
-import { detailLabels, formatNumber, formatDate , rainSummaryLabels } from '../utils/utils';
+import { detailLabels, formatNumber, formatDate, rainSummaryLabels } from '../utils/utils';
 
 const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selectedHydro24h }) => {
 
@@ -79,6 +79,11 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
     const renderDetails = (stationCode, stationData) => {
         if (!selectedDetails || !Object.values(selectedDetails).some(v => v)) return null;
 
+        // Verificar se stationData.detalhes existe e tem items
+        if (!stationData.detalhes || !stationData.detalhes.items || stationData.detalhes.items.length === 0) {
+            return <p>Detalhes não disponíveis para esta estação.</p>;
+        }
+
         return (
             <div>
                 <h5>Detalhes</h5>
@@ -117,8 +122,8 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
                     <h4>Estação {stationCode}</h4>
                     <p style={{ marginBottom: '-5px ' }}>{data[stationCode].nome || 'Nome não disponível'}</p>
                     {renderDetails(stationCode, data[stationCode])}
-                    {renderHydroData(data[stationCode].hidro_24h.items, stationCode, data[stationCode].nome)}
-                    {renderRainSummary(data[stationCode].chuva_ult.items, stationCode)}
+                    {renderHydroData(data[stationCode].hidro_24h?.items, stationCode, data[stationCode].nome)}
+                    {renderRainSummary(data[stationCode].chuva_ult?.items, stationCode)}
                 </div>
             ))}
         </div>
