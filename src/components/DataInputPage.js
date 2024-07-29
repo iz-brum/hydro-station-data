@@ -109,8 +109,9 @@ const DataInputPage = () => {
     }
 
     setLoading(true);
-    const codesArray = codes.split(',').map(code => code.trim());
+    const codesArray = codes.split(',').map(code => code.trim()).filter(code => code !== '');
     const fetchedData = {};
+    let invalidCodes = [];
 
     const requests = codesArray.map(async (code) => {
       if (memoizedData[code]) {
@@ -122,22 +123,25 @@ const DataInputPage = () => {
 
       try {
         const details = await fetchStationDetails(code);
-        // console.log(`Detalhes da estação ${code}:`, details.data);
         if (details.data && details.data.items && details.data.items[0]) {
           fetchedData[code].nome = details.data.items[0].nome;
           if (selectedData.detalhes) {
             fetchedData[code].detalhes = details.data;
           }
+        } else {
+          invalidCodes.push(code);
         }
       } catch (error) {
         console.error(`Erro ao buscar detalhes da estação ${code}:`, error);
+        invalidCodes.push(code);
       }
 
       if (selectedData.hidro_24h) {
         try {
           const hidro24h = await fetchHydro24h(code);
-          // console.log(`Dados hidrométricos 24h da estação ${code}:`, hidro24h.data);
-          fetchedData[code].hidro_24h = hidro24h.data;
+          if (hidro24h.data) {
+            fetchedData[code].hidro_24h = hidro24h.data;
+          }
         } catch (error) {
           console.error(`Erro ao buscar dados hidrométricos para a estação ${code}:`, error);
         }
@@ -146,8 +150,9 @@ const DataInputPage = () => {
       if (selectedData.chuva_ult) {
         try {
           const chuvaUlt = await fetchRainSummary(code);
-          // console.log(`Resumo de chuva da estação ${code}:`, chuvaUlt.data);
-          fetchedData[code].chuva_ult = chuvaUlt.data;
+          if (chuvaUlt.data) {
+            fetchedData[code].chuva_ult = chuvaUlt.data;
+          }
         } catch (error) {
           console.error(`Erro ao buscar resumo de chuva para a estação ${code}:`, error);
         }
@@ -158,11 +163,17 @@ const DataInputPage = () => {
 
     await Promise.all(requests);
 
+    if (invalidCodes.length > 0) {
+      setPopupMessage(`Os seguintes códigos de estação são inválidos ou não foram encontrados: ${invalidCodes.join(', ')}`);
+      setShowPopup(true);
+    }
+
     // console.log('Dados completos:', fetchedData);
     setData(fetchedData);
     setLoading(false);
     return fetchedData;
   };
+
 
   const handleFetchData = async () => {
     const fetchedData = await fetchData();
