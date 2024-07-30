@@ -19,59 +19,104 @@ const AllHydroDataPage = () => {
         nivel: parseFloat(item.nivel),
         vazao: parseFloat(item.vazao),
     }));
-  
+
     return (
         <div className="all-hydro-data-container">
             <div className="station-header">
                 <div className="station-header-inner">
-                    <h3 className="station-code">Estação {stationCode}</h3>
-                    <h4 className="station-name">{stationName || 'Nome não disponível'}</h4>
+                    <h3 className="station-name">{stationName || 'Nome não disponível'} /</h3>
+                    <h4 className="station-code">{stationCode}</h4>
                 </div>
-                <h3 style={{ margin: '0' }}>Dados Hidrométricos 24h</h3>
+                <h3 style={{ margin: '0', fontSize: '1.5rem' }}>Dados Hidrométricos 24h</h3>
             </div>
 
             {/* Gráfico de Chuva */}
             <div className="chart-container">
-                <h4>Chuva (mm)</h4>
+                <h4 className='text-center'>Chuva (mm)</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={chartData.slice().reverse()} margin={{ left: 10, right: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="data" tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} />
-                        <YAxis domain={getDomain(chartData,'chuva')} />
+                        <XAxis
+                            dataKey="data"
+                            tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            defaultValue=""
+                        />
+                        <YAxis
+                            domain={getDomain(chartData, 'chuva')}
+                            tickFormatter={(value) => value.toFixed(2)}
+                            defaultValue={[0, 1]}
+                        />
                         <Tooltip formatter={(value) => `${value} mm`} />
-                        <Line type="monotone" dataKey="chuva" stroke="#8884d8" dot={true} />
+                        <Line
+                            type="linear"
+                            dataKey="chuva"
+                            stroke="#3498db"  // Cor azul para chuva
+                            strokeWidth={4}   // Espessura da linha
+                            dot={{ r: 4 }}    // Tamanho dos pontos
+                            activeDot={{ r: 8 }} // Tamanho do ponto quando ativo
+                        />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
 
             {/* Gráfico de Nível */}
             <div className="chart-container">
-                <h4>Nível (cm)</h4>
+                <h4 className='text-center'>Nível (cm)</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={chartData.slice().reverse()} margin={{ left: 25, right: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="data" tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} />
-                        <YAxis domain={getDomain('nivel')} />
+                        <XAxis
+                            dataKey="data"
+                            tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            defaultValue=""
+                        />
+                        <YAxis
+                            domain={getDomain(chartData, 'nivel')}
+                            tickFormatter={(value) => value.toFixed(2)}
+                            defaultValue={[0, 1]}
+                        />
                         <Tooltip formatter={(value) => `${value} cm`} />
-                        <Line type="monotone" dataKey="nivel" stroke="#82ca9d" dot={true} />
+                        <Line
+                            type="step"
+                            dataKey="nivel"
+                            stroke="#82ca9d"  // Cor azul para nível
+                            strokeWidth={2}   // Espessura da linha
+                            dot={{ r: 4 }}    // Tamanho dos pontos
+                            activeDot={{ r: 8 }} // Tamanho do ponto quando ativo
+                        />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
 
             {/* Gráfico de Vazão */}
             <div className="chart-container">
-                <h4>Vazão (m³/s)</h4>
+                <h4 className='text-center'>Vazão (m³/s)</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={chartData.slice().reverse()} margin={{ left: 30, right: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="data" tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} />
-                        <YAxis domain={getDomain('vazao')} />
+                        <XAxis
+                            dataKey="data"
+                            tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            defaultValue=""
+                        />
+                        <YAxis
+                            domain={getDomain(chartData, 'vazao')}
+                            tickFormatter={(value) => value.toFixed(2)}
+                            defaultValue={[0, 1]}
+                        />
                         <Tooltip formatter={(value) => `${value} m³/s`} />
-                        <Line type="monotone" dataKey="vazao" stroke="#ffc658" dot={true} />
+                        <Line
+                            type="monotone"
+                            dataKey="vazao"
+                            stroke="#ffc658"
+                            strokeWidth={3}   // Espessura da linha
+                            dot={{ r: 4 }}    // Tamanho dos pontos
+                            activeDot={{ r: 8 }} // Tamanho do ponto quando ativo
+                        />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
-            
+
             <button className='btn-voltar' onClick={() => navigate(-1)}>Voltar</button>
         </div>
     );
