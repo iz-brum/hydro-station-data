@@ -1,41 +1,82 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+    LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
+} from 'recharts';
 import './css/DataView.css';
-import { detailLabels, formatNumber, formatDate, rainSummaryLabels } from '../utils/utils';
+import { detailLabels, formatNumber, formatDate, rainSummaryLabels, getDomain } from '../utils/utils';
+
 
 const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selectedHydro24h }) => {
-
     const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState('chuva');
 
     const renderHydroData = (hydroData, stationCode, stationName) => {
         if (!selectedHydro24h || !Object.values(selectedHydro24h).some(v => v)) return null;
-
-        const dataToShow = hydroData.slice(0, 5);
         if (!hydroData || hydroData.length === 0) return null;
+
+        const chartData = hydroData.map(item => ({
+            data: formatDate(item.data),
+            chuva: selectedHydro24h.chuva ? parseFloat(item.chuva) : null,
+            nivel: selectedHydro24h.nivel ? parseFloat(item.nivel) : null,
+            vazao: selectedHydro24h.vazao ? parseFloat(item.vazao) : null,
+        }));
+
+        const tabs = [
+            { key: 'chuva', label: 'Chuva (mm)' },
+            { key: 'nivel', label: 'Nível (cm)' },
+            { key: 'vazao', label: 'Vazão (m³/s)' },
+        ];
 
         return (
             <div>
                 <h5>Dados Hidrométricos 24h</h5>
-                <table>
-                    <thead>
-                        <tr>
-                            {selectedHydro24h.data && <th>Data</th>}
-                            {selectedHydro24h.chuva && <th style={{ textAlign: 'center' }}>Chuva (mm)</th>}
-                            {selectedHydro24h.nivel && <th style={{ textAlign: 'center' }}>Nível (cm)</th>}
-                            {selectedHydro24h.vazao && <th style={{ textAlign: 'center' }}>Vazão (m³/s)</th>}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataToShow.map((item, index) => (
-                            <tr key={index}>
-                                {selectedHydro24h.data && <td>{formatDate(item.data)}</td>}
-                                {selectedHydro24h.chuva && <td style={{ textAlign: 'center' }}>{formatNumber(item.chuva)}</td>}
-                                {selectedHydro24h.nivel && <td style={{ textAlign: 'center' }}>{formatNumber(item.nivel)}</td>}
-                                {selectedHydro24h.vazao && <td style={{ textAlign: 'center' }}>{formatNumber(item.vazao)}</td>}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="tabs">
+                    {tabs.map(tab => selectedHydro24h[tab.key] && (
+                        <button
+                            key={tab.key}
+                            className={`tab-button ${activeTab === tab.key ? 'active' : ''}`}
+                            onClick={() => setActiveTab(tab.key)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+                <ResponsiveContainer width="101%" height={400}>
+                    <LineChart data={chartData.slice().reverse()} margin={{ left: 30, right: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="data"
+                            tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        />
+                        <YAxis
+                            domain={getDomain(chartData, activeTab)}
+                            tickFormatter={(value) => value.toFixed(2)} />
+                        <Tooltip
+                            formatter={(value, name) => {
+                                switch (name) {
+                                    case 'chuva':
+                                        return [`${value} mm`, 'Chuva'];
+                                    case 'nivel':
+                                        return [`${value} cm`, 'Nível'];
+                                    case 'vazao':
+                                        return [`${value} m³/s`, 'Vazão'];
+                                    default:
+                                        return [value, name];
+                                }
+                            }}
+                        />
+                        {activeTab === 'chuva' && (
+                            <Line type="monotone" dataKey="chuva" stroke="#8884d8" dot={true} />
+                        )}
+                        {activeTab === 'nivel' && (
+                            <Line type="monotone" dataKey="nivel" stroke="#82ca9d" dot={true} />
+                        )}
+                        {activeTab === 'vazao' && (
+                            <Line type="monotone" dataKey="vazao" stroke="#ffc658" dot={true} />
+                        )}
+                    </LineChart>
+                </ResponsiveContainer>
                 <button
                     className="view-more-button"
                     onClick={() => navigate('/all-hydro-data', { state: { data: hydroData, stationCode, stationName } })}
@@ -75,11 +116,9 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
         );
     };
 
-
     const renderDetails = (stationCode, stationData) => {
         if (!selectedDetails || !Object.values(selectedDetails).some(v => v)) return null;
 
-        // Verificar se stationData.detalhes existe e tem items
         if (!stationData.detalhes || !stationData.detalhes.items || stationData.detalhes.items.length === 0) {
             return <p>Detalhes não disponíveis para esta estação.</p>;
         }
