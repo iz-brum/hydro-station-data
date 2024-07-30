@@ -53,7 +53,8 @@
     margin-top: 10px;
 }
 
-.station-card th, .station-card td {
+.station-card th,
+.station-card td {
     text-align: left;
     padding: 8px;
     border: 1px solid #444;
@@ -109,14 +110,14 @@
 }
 
 .station-code {
-    font-size: 1.5rem;
-    color: #fff;
-    margin-right: 10px;
+    font-size: 1.2rem;
+    color: #ccc;
 }
 
 .station-name {
-    font-size: 1.2rem;
-    color: #ccc;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-right: 10px;
 }
 
 .all-hydro-data-container table {
@@ -127,7 +128,8 @@
     table-layout: fixed;
 }
 
-.all-hydro-data-container th, .all-hydro-data-container td {
+.all-hydro-data-container th,
+.all-hydro-data-container td {
     padding: 10px;
     border: 1px solid #444;
     text-align: center;
@@ -179,7 +181,8 @@
 }
 
 .tabs .tab-button.active {
-    background-color: #007bff; /* Cor diferente para o botão ativo */
+    background-color: #007bff;
+    /* Cor diferente para o botão ativo */
 }
 
 .recharts-default-tooltip {
@@ -188,4 +191,8 @@
 
 .btn-voltar {
     width: 90%;
+}
+
+.text-center {
+    text-align: center;
 }
