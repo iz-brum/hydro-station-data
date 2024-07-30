@@ -184,6 +184,11 @@ label:hover {
 }
 
 @media (max-width: 1200px) {
+    .container {
+        max-width: 98%;
+        width: 90%;
+    }
+    
     .label-checkbox {
         font-size: 0.8rem;
     }
@@ -235,6 +240,11 @@ label:hover {
 }
 
 @media (max-width: 800px) {
+    .container {
+        max-width: 100%;
+        width: 98%;
+    }
+
     .label-checkbox {
         font-size: 0.55rem;
     }
