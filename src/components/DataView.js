@@ -47,11 +47,14 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                             dataKey="data"
-                            tickFormatter={(tick) => new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            tickFormatter={(tick) =>
+                                tick ? new Date(tick.replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$2/$1/$3')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                    : ''
+                            }
                         />
                         <YAxis
-                            domain={getDomain(chartData, activeTab)}
-                            tickFormatter={(value) => value.toFixed(2)} />
+                            domain={getDomain(chartData, activeTab) || [0, 1]}
+                            tickFormatter={(value) => (value !== null && value !== undefined ? value.toFixed(2) : '0')} />
                         <Tooltip
                             formatter={(value, name) => {
                                 switch (name) {
