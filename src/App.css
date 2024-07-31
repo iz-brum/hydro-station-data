@@ -1,40 +1,100 @@
+/* App.css */
 
-/* Estilos gerais */
+/* Definição das variáveis de cores */
+:root {
+  --primary-color: #1e88e5;
+  /* Azul Primário */
+  --secondary-color: #ffd700;
+  /* Amarelo Secundário */
+  --background-color: #1a1a1a;
+  /* Cinza muito escuro para contraste */
+  --text-color: #ffffff;
+  /* Branco para texto principal */
+  --text-color-alt: #cccccc;
+  /* Cinza claro para texto secundário */
+  --header-bg: #1e88e5;
+  /* Fundo do Cabeçalho */
+  --footer-bg: #1e88e5;
+  /* Fundo do Rodapé */
+  --nav-link-hover: #0056b3;
+  /* Azul mais escuro para hover */
+  --input-background: #333333;
+  /* Cinza escuro para inputs */
+  --input-border: #555555;
+  /* Borda de inputs */
+  --input-text: #ffffff;
+  /* Texto em inputs */
+}
+
+/* Estilos globais */
 body {
-  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
 }
 
-/* Estilos para a navbar */
-nav {
-  background-color: #333;
-  padding: 1rem;
+a {
+  color: var(--secondary-color);
 }
 
-nav ul {
+a:hover {
+  color: var(--primary-color);
+}
+
+/* Estilos da Navbar */
+.navbar {
+  background-color: var(--background-color);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: space-around;
+  gap: 2rem;
 }
 
-nav ul li {
+.nav-item {
   margin: 0;
 }
 
-nav ul li a {
-  color: white;
+.nav-link {
+  color: var(--text-color);
   text-decoration: none;
   padding: 0.5rem 1rem;
+  position: relative;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
   display: block;
+  width: 0;
+  height: 2px;
+  background: var(--secondary-color);
+  transition: width 0.3s;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-nav ul li a:hover {
-  background-color: #575757;
-  border-radius: 4px;
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
 }
 
+.nav-link:hover {
+  color: var(--secondary-color);
+}
 
+.nav-link.active {
+  color: var(--secondary-color);
+}
