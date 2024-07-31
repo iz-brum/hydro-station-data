@@ -3,27 +3,26 @@
 /* Estilos para o container */
 .container {
     padding: 2rem;
-    background-color: #2C2C2E;
+    background-color: var(--background-color); /* Fundo mais escuro */
     margin: 2rem auto;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    max-width: 90%;
-    width: 80%;
-    color: #f4f4f4;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Aumentar sombra para destacar */
+    max-width: 98%;
+    width: 88%;
+    color: var(--text-color); /* Texto branco */
 }
-
 
 /* Estilos para o título */
 .container h2 {
     text-align: center;
-    color: #ffffff;
+    color: var(--text-color); /* Branco */
     margin: 0 0 25px;
     font-size: 2rem;
 }
 
 .list-stations:hover {
     cursor: auto;
-    color: white;
+    color: var(--text-color); /* Branco */
 }
 
 /* Estilos para o textarea */
@@ -31,18 +30,28 @@ textarea {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #444;
+    border: 1px solid var(--input-border); /* Borda cinza */
     border-radius: 8px;
     resize: none;
-    background-color: #3C3C3E;
-    color: #f4f4f4;
+    background-color: var(--input-background); /* Fundo mais escuro */
+    color: var(--input-text); /* Texto branco */
     font-family: Arial, sans-serif;
     box-sizing: border-box;
-    /* Adiciona isso para incluir padding e border na largura total */
+}
+
+/* Botões */
+button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--nav-link-hover); /* Azul mais escuro */
     transform: scale(1.05);
 }
 
@@ -64,9 +73,9 @@ button:hover {
     grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
     margin: 10px 0;
-    overflow-x: auto; /* Adiciona a barra de rolagem horizontal */
-    padding-bottom: 10px; /* Espaço extra para a barra de rolagem */
-    scrollbar-width: thin; /* Para navegadores que suportam */
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
 }
 
 .label-checkbox {
@@ -74,12 +83,12 @@ button:hover {
     align-items: center;
     margin-bottom: 0.5rem;
     font-size: 1rem;
-    color: #f1f1f1;
+    color: var(--text-color-alt); /* Cinza claro */
     white-space: nowrap;
 }
 
 .category {
-    background-color: #383838cc;
+    background-color: var(--input-background); /* Fundo de categoria */
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -87,7 +96,7 @@ button:hover {
 
 .category h3 {
     cursor: pointer;
-    color: #f1f1f1;
+    color: var(--text-color-alt); /* Cinza claro */
     font-size: 1.3rem;
     margin-bottom: 10px;
     width: max-content;
@@ -101,8 +110,8 @@ button:hover {
 
 .category .select-buttons button {
     padding: 5px 10px;
-    background-color: #007BFF;
-    color: #fff;
+    background-color: var(--primary-color); /* Azul Primário */
+    color: var(--text-color); /* Branco */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -110,52 +119,50 @@ button:hover {
 }
 
 .category .select-buttons button:hover {
-    background-color: #0056b3;
+    background-color: var(--nav-link-hover); /* Azul mais escuro */
 }
-
 
 /* Estilos para os checkboxes */
 input[type="checkbox"] {
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 2px solid #ccc;
+    border: 2px solid var(--input-border); /* Cinza escuro */
     border-radius: 3px;
     outline: none;
     cursor: pointer;
     position: relative;
-    background-color: #1a1a1a;
+    background-color: var(--input-background); /* Cinza escuro */
     margin-right: 10px;
     transition: border 0.3s ease, background-color 0.3s ease;
 }
 
 input[type="checkbox"]:checked {
-    border-color: #007BFF;
-    background-color: #007BFF;
+    border-color: var(--primary-color); /* Azul Primário */
+    background-color: var(--primary-color); /* Azul Primário */
 }
 
 input[type="checkbox"]:checked::before {
     content: '✖';
     font-size: 17px;
-    color: #2d2d2d;
+    color: var(--background-color); /* Fundo escuro */
     position: absolute;
     left: 2px;
     top: -4px;
 }
 
 input[type="checkbox"]:hover {
-    border-color: #0056b3;
+    border-color: var(--nav-link-hover); /* Azul mais escuro */
 }
 
 /* Estilos para os labels */
 label {
     display: flex;
     align-items: center;
-    color: #f1f1f1;
+    color: var(--text-color-alt); /* Cinza claro */
     width: max-content;
     margin-bottom: 10px;
     font-family: 'Courier New', Courier, monospace;
-    /* Fonte monoespaçada */
     font-size: 1.15rem;
     font-weight: 500;
     cursor: pointer;
@@ -164,6 +171,9 @@ label {
 label:hover {
     color: #d1d1d1;
 }
+
+
+
 
 /* Reduzir a fonte para viewports menores (zoom in) */
 @media (max-width: 1300px) {
