@@ -3,26 +3,27 @@
 /* Estilos para o container */
 .container {
     padding: 2rem;
-    background-color: var(--background-color); /* Fundo mais escuro */
+    background-color: var(--background-color);
     margin: 2rem auto;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Aumentar sombra para destacar */
-    max-width: 98%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    max-width: 100%; /* Use 100% para evitar rolagem horizontal */
     width: 88%;
-    color: var(--text-color); /* Texto branco */
+    color: var(--text-color);
+    overflow-x: hidden; /* Previne rolagem horizontal */
 }
 
 /* Estilos para o título */
 .container h2 {
     text-align: center;
-    color: var(--text-color); /* Branco */
+    color: var(--text-color);
     margin: 0 0 25px;
     font-size: 2rem;
 }
 
 .list-stations:hover {
     cursor: auto;
-    color: var(--text-color); /* Branco */
+    color: var(--text-color);
 }
 
 /* Estilos para o textarea */
@@ -30,11 +31,11 @@ textarea {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid var(--input-border); /* Borda cinza */
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     resize: none;
-    background-color: var(--input-background); /* Fundo mais escuro */
-    color: var(--input-text); /* Texto branco */
+    background-color: var(--input-background);
+    color: var(--input-text);
     font-family: Arial, sans-serif;
     box-sizing: border-box;
 }
@@ -51,7 +52,7 @@ button {
 }
 
 button:hover {
-    background-color: var(--nav-link-hover); /* Azul mais escuro */
+    background-color: var(--nav-link-hover);
     transform: scale(1.05);
 }
 
@@ -60,11 +61,13 @@ button:hover {
     margin-top: 2rem;
 }
 
+/* Contêiner de filtros */
 .filters-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+    width: 100%; /* Garante que os filtros não excedam a largura do contêiner */
 }
 
 /* Estilos para os filtros */
@@ -83,12 +86,12 @@ button:hover {
     align-items: center;
     margin-bottom: 0.5rem;
     font-size: 1rem;
-    color: var(--text-color-alt); /* Cinza claro */
+    color: var(--text-color-alt);
     white-space: nowrap;
 }
 
 .category {
-    background-color: var(--input-background); /* Fundo de categoria */
+    background-color: var(--input-background);
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -96,7 +99,7 @@ button:hover {
 
 .category h3 {
     cursor: pointer;
-    color: var(--text-color-alt); /* Cinza claro */
+    color: var(--text-color-alt);
     font-size: 1.3rem;
     margin-bottom: 10px;
     width: max-content;
@@ -110,8 +113,8 @@ button:hover {
 
 .category .select-buttons button {
     padding: 5px 10px;
-    background-color: var(--primary-color); /* Azul Primário */
-    color: var(--text-color); /* Branco */
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -119,7 +122,7 @@ button:hover {
 }
 
 .category .select-buttons button:hover {
-    background-color: var(--nav-link-hover); /* Azul mais escuro */
+    background-color: var(--nav-link-hover);
 }
 
 /* Estilos para os checkboxes */
@@ -127,39 +130,39 @@ input[type="checkbox"] {
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 2px solid var(--input-border); /* Cinza escuro */
+    border: 2px solid var(--input-border);
     border-radius: 3px;
     outline: none;
     cursor: pointer;
     position: relative;
-    background-color: var(--input-background); /* Cinza escuro */
+    background-color: var(--input-background);
     margin-right: 10px;
     transition: border 0.3s ease, background-color 0.3s ease;
 }
 
 input[type="checkbox"]:checked {
-    border-color: var(--primary-color); /* Azul Primário */
-    background-color: var(--primary-color); /* Azul Primário */
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 input[type="checkbox"]:checked::before {
     content: '✖';
     font-size: 17px;
-    color: var(--background-color); /* Fundo escuro */
+    color: var(--background-color);
     position: absolute;
     left: 2px;
     top: -4px;
 }
 
 input[type="checkbox"]:hover {
-    border-color: var(--nav-link-hover); /* Azul mais escuro */
+    border-color: var(--nav-link-hover);
 }
 
 /* Estilos para os labels */
 label {
     display: flex;
     align-items: center;
-    color: var(--text-color-alt); /* Cinza claro */
+    color: var(--text-color-alt);
     width: max-content;
     margin-bottom: 10px;
     font-family: 'Courier New', Courier, monospace;
@@ -172,118 +175,97 @@ label:hover {
     color: #d1d1d1;
 }
 
-
-
-
-/* Reduzir a fonte para viewports menores (zoom in) */
-@media (max-width: 1300px) {
-    .label-checkbox {
-        font-size: 0.9rem;
-    }
-
-    input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-    }
-
-    input[type="checkbox"]:checked::before {
-        font-size: 13px;
-        left: 1px;
-        top: -3px;
-    }
+/* Contêiner de ícones de ação */
+.action-icons {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap; /* Envolver ícones para evitar rolagem horizontal */
 }
 
-@media (max-width: 1200px) {
-    .container {
-        max-width: 98%;
-        width: 90%;
-    }
-    
-    .label-checkbox {
-        font-size: 0.8rem;
-    }
-
-    input[type="checkbox"] {
-        width: 15px;
-        height: 15px;
-    }
-
-    input[type="checkbox"]:checked::before {
-        font-size: 13px;
-        left: 1px;
-        top: -3px;
-    }
+.icon-container {
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
 }
 
-@media (max-width: 1000px) {
-    .label-checkbox {
-        font-size: 0.5rem;
-    }
-
-    input[type="checkbox"] {
-        width: 14px;
-        height: 14px;
-    }
-    
-    input[type="checkbox"]:checked::before {
-        font-size: 13px;
-        left: 1px;
-        top: -3px;
-    }
+.icon {
+    font-size: 24px;
+    color: #007bff;
 }
 
-@media (max-width: 900px) {
-    .label-checkbox {
-        font-size: 0.6rem;
+.icon:hover {
+    color: #0056b3;
+}
+
+/* Tooltip de ação */
+.icon-container .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 110%; /* Posição abaixo do ícone */
+    left: 5%;
+    transform: translateX(-5%);
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    white-space: nowrap;
+    font-size: 1.3rem;
+}
+
+.icon-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+}
+
+
+/* Reduzir margens e tamanhos para telas menores */
+@media (max-width: 768px) {
+    .icon {
+        font-size: 20px;
     }
 
-    input[type="checkbox"] {
-        width: 13px;
-        height: 13px;
-    }
-    
-    input[type="checkbox"]:checked::before {
+    .icon-container {
+        width: 120px;
         font-size: 12px;
-        left: 0px;
-        top: -4px;
+    }
+
+    .category h3, .category .select-buttons button {
+        font-size: 0.9rem; /* Reduzir tamanho da fonte */
     }
 }
 
-@media (max-width: 800px) {
-    .container {
-        max-width: 100%;
-        width: 98%;
+@media (max-width: 576px) {
+    .icon-container {
+        margin-right: 10px; /* Reduzir o espaçamento entre ícones */
     }
 
-    .label-checkbox {
-        font-size: 0.55rem;
+    .icon {
+        font-size: 18px;
     }
 
-    input[type="checkbox"] {
-        width: 12px;
-        height: 12px;
-    }
-    
-    input[type="checkbox"]:checked::before {
-        font-size: 11px;
-        left: 0px;
-        top: -3px;
-    }
-}
-
-@media (max-width: 700px) {
-    .label-checkbox {
-        font-size: 0.45rem;
-    }
-    
-    input[type="checkbox"] {
-        width: 11px;
-        height: 11px;
+    .category h3, .category .select-buttons button {
+        font-size: 0.8rem; /* Reduzir tamanho da fonte */
     }
 
-    input[type="checkbox"]:checked::before {
-        font-size: 9px;
-        left: 1px;
-        top: -3px;
+    .filters {
+        grid-template-columns: repeat(2, 1fr); /* Ajustar layout dos filtros */
     }
 }
