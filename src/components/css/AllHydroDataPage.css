@@ -1,0 +1,125 @@
+/* src/components/css/AllHydroDataPage.css */
+
+/* Container principal da página */
+.all-hydro-data-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 15px auto;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+/* Estilo para o cabeçalho da estação */
+.station-header {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+    background-color: #282828; /* Fundo escuro para contraste */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #fff;
+}
+
+.station-header-inner {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.station-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    color: #fff;
+    margin-right: 5px;
+}
+
+
+
+.station-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #ddd;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Container para os gráficos */
+.all-hydro-data-container .chart-container {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Título dos gráficos */
+.chart-container h4 {
+    margin: 0;
+    padding-bottom: 10px;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+/* Botão de voltar */
+.btn-voltar {
+    display: block;
+    width: 150px;
+    padding: 10px 20px;
+    margin: 20px auto 0;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.btn-voltar:hover {
+    background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .all-hydro-data-container {
+        padding: 10px;
+    }
+
+    .station-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .station-header-inner {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .station-name {
+        font-size: 1.5rem;
+    }
+
+  
+
+    .chart-container {
+        padding: 15px;
+    }
+
+    .chart-container h4 {
+        font-size: 1rem;
+    }
+
+    .btn-voltar {
+        width: 100%;
+    }
+}
