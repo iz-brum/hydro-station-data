@@ -1,5 +1,3 @@
-// hydro-station-data/src/components/DataInputPage.js
-
 import React, { useState, useEffect } from 'react';
 import { fetchStationDetails, fetchHydro24h, fetchRainSummary } from '../api/apiService';
 import DataView from './DataView';
@@ -10,6 +8,8 @@ import * as XLSX from 'xlsx';
 import { detailLabels, hydroDataLabels, rainSummaryLabels, mapPeriodLabel, replaceColumnNames, setColumnWidths } from '../utils/utils';
 import { useLoading } from '../context/LoadingContext';
 import PreviewModal from './PreviewModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faEye, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 
 const DataInputPage = () => {
   const { setLoading } = useLoading();
@@ -90,37 +90,36 @@ const DataInputPage = () => {
     localStorage.setItem('selectedHydro24h', JSON.stringify(selectedHydro24h));
   }, [selectedHydro24h]);
 
-
   const fetchData = async () => {
     if (!codes) {
       setPopupMessage('Por favor, digite os códigos das estações.');
       setShowPopup(true);
       return null;
     }
-  
+
     const noDetailsSelected = selectedData.detalhes && !Object.values(selectedDetails).some(v => v);
     const noRainSummarySelected = selectedData.chuva_ult && !Object.values(selectedRainSummary).some(v => v);
     const noHydro24hSelected = selectedData.hidro_24h && !Object.values(selectedHydro24h).some(v => v);
-  
+
     if (noDetailsSelected && noRainSummarySelected && noHydro24hSelected) {
       setPopupMessage('Por favor, selecione pelo menos um filtro em uma das categorias.');
       setShowPopup(true);
       return null;
     }
-  
+
     setLoading(true);
     const codesArray = codes.split(',').map(code => code.trim()).filter(code => code);
     const fetchedData = {};
     const invalidCodes = new Set();
-  
+
     const requests = codesArray.map(async (code) => {
       if (memoizedData[code]) {
         fetchedData[code] = memoizedData[code];
         return;
       }
-  
+
       fetchedData[code] = {};
-  
+
       try {
         const details = await fetchStationDetails(code);
         if (details.data && details.data.items && details.data.items[0]) {
@@ -135,7 +134,7 @@ const DataInputPage = () => {
         console.error(`Erro ao buscar detalhes da estação ${code}:`, error);
         invalidCodes.add(code);
       }
-  
+
       if (selectedData.hidro_24h) {
         try {
           const hidro24h = await fetchHydro24h(code);
@@ -149,7 +148,7 @@ const DataInputPage = () => {
           invalidCodes.add(code);
         }
       }
-  
+
       if (selectedData.chuva_ult) {
         try {
           const chuvaUlt = await fetchRainSummary(code);
@@ -163,12 +162,12 @@ const DataInputPage = () => {
           invalidCodes.add(code);
         }
       }
-  
+
       memoizedData[code] = fetchedData[code];
     });
-  
+
     await Promise.all(requests);
-  
+
     // Remover estações sem dados válidos
     const validData = {};
     Object.keys(fetchedData).forEach(code => {
@@ -182,19 +181,16 @@ const DataInputPage = () => {
         invalidCodes.add(code);
       }
     });
-  
+
     if (invalidCodes.size > 0) {
       setPopupMessage(`Os seguintes códigos de estação são inválidos ou não possuem dados: ${[...invalidCodes].join(', ')}`);
       setShowPopup(true);
     }
-  
+
     setData(validData);
     setLoading(false);
     return validData;
   };
-  
-
-
 
   const handleFetchData = async () => {
     const fetchedData = await fetchData();
@@ -252,7 +248,6 @@ const DataInputPage = () => {
     return filteredData;
   };
 
-
   const handlePreview = async () => {
     const filteredData = await fetchDataAndFilter();
     if (filteredData) {
@@ -262,7 +257,6 @@ const DataInputPage = () => {
       setShowPreview(true);
     }
   };
-
 
   const flattenData = (data) => {
     const flattened = [];
@@ -307,7 +301,6 @@ const DataInputPage = () => {
     });
     return flattened;
   };
-
 
   const handleDownloadData = async () => {
     const fetchedData = await fetchData();
@@ -366,7 +359,6 @@ const DataInputPage = () => {
 
     setLoading(false);
   };
-
 
   const handleDetailsCheckboxChange = (e) => {
     setSelectedDetails({
@@ -442,17 +434,7 @@ const DataInputPage = () => {
   return (
     <div className="container">
       <h2>Painel de Controle de Dados</h2>
-      <label className='list-stations'>
-        Lista de códigos de estações:
-      </label>
-      <textarea
-        rows="5"
-        cols="50"
-        placeholder="Digite os códigos das estações separados por vírgulas"
-        value={codes}
-        onChange={(e) => setCodes(e.target.value)}
-        style={{ resize: 'vertical' }}
-      ></textarea>
+      
       <div className="filters-container">
         <div className="category">
           <h3 onClick={() => toggleVisibility('detalhes')}>Ficha da estação</h3>
@@ -533,9 +515,39 @@ const DataInputPage = () => {
         </div>
       </div>
 
-      <button onClick={handleFetchData}>Buscar e Exibir Dados</button>
-      <button onClick={handlePreview}>Revisar Dados Antes do Download</button>
-      <button onClick={confirmDownload}>Confirmar e Baixar Dados XLSX</button>
+      <label className='list-stations'>
+        Lista de códigos de estações:
+      </label>
+      <textarea
+        rows="3"
+        cols="50"
+        placeholder="Digite os códigos das estações separados por vírgulas"
+        value={codes}
+        onChange={(e) => setCodes(e.target.value)}
+        style={{ resize: 'vertical' }}
+      ></textarea>
+
+      <div className="action-icons">
+        <div className="icon-container">
+          <div className="icon" onClick={handleFetchData}>
+            <FontAwesomeIcon icon={faSearch} />
+            <span className="tooltip-text">Buscar e Exibir Dados</span>
+          </div>
+        </div>
+        <div className="icon-container">
+          <div className="icon" onClick={handlePreview}>
+            <FontAwesomeIcon icon={faEye} />
+            <span className="tooltip-text">Revisar Dados Antes do Download</span>
+          </div>
+        </div>
+        <div className="icon-container">
+          <div className="icon" onClick={confirmDownload}>
+            <FontAwesomeIcon icon={faFileDownload} />
+            <span className="tooltip-text">Confirmar e Baixar Dados XLSX</span>
+          </div>
+        </div>
+      </div>
+
       {data && <DataView
         className="data-view"
         data={data}
