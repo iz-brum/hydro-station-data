@@ -2,12 +2,12 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { formatDate, getDomain } from '../utils/utils';
-import './css/DataView.css';
+import './css/AllHydroDataPage.css';
 
 const AllHydroDataPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { data, stationCode, stationName } = location.state || {};
+    const { data, stationName } = location.state || {};
 
     if (!data) {
         return <div>Nenhum dado disponível.</div>;
@@ -24,10 +24,9 @@ const AllHydroDataPage = () => {
         <div className="all-hydro-data-container">
             <div className="station-header">
                 <div className="station-header-inner">
-                    <h3 className="station-name">{stationName || 'Nome não disponível'} /</h3>
-                    <h4 className="station-code">{stationCode}</h4>
+                    <h3 className="station-name">{stationName || 'Nome não disponível'}</h3>
                 </div>
-                <h3 style={{ margin: '0', fontSize: '1.5rem' }}>Dados Hidrométricos 24h</h3>
+                <h4 className="station-title">Dados Hidrométricos 24h</h4>
             </div>
 
             {/* Gráfico de Chuva */}
