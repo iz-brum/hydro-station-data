@@ -32,7 +32,8 @@
     </div>
     <script type="text/javascript">
         var pathname = window.location.pathname.split('/');
-        window.location.href = '/' + pathname[1] + '/index.html' + window.location.hash;
+        var hash = window.location.hash;
+        window.location.href = '/hydro-station-data/#' + pathname.slice(2).join('/') + hash;
     </script>
 </body>
 
