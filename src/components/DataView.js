@@ -9,7 +9,6 @@ import { faThLarge, faBars, faCloudRain, faSlidersH } from '@fortawesome/free-so
 const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selectedHydro24h }) => {
     const navigate = useNavigate();
 
-    // Recupera os estados salvos do localStorage
     const initialListView = localStorage.getItem('isListView') === 'true';
     const initialGlobalControl = localStorage.getItem('isGlobalControlActive') === 'true';
     const initialLocalActiveTabs = JSON.parse(localStorage.getItem('localActiveTabs')) || {};
@@ -19,17 +18,14 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
     const [localActiveTabs, setLocalActiveTabs] = useState(initialLocalActiveTabs);
     const [isListView, setIsListView] = useState(initialListView);
 
-    // Atualiza o localStorage quando isListView muda
     useEffect(() => {
         localStorage.setItem('isListView', isListView);
     }, [isListView]);
 
-    // Atualiza o localStorage quando isGlobalControlActive muda
     useEffect(() => {
         localStorage.setItem('isGlobalControlActive', isGlobalControlActive);
     }, [isGlobalControlActive]);
 
-    // Atualiza o localStorage quando localActiveTabs muda
     useEffect(() => {
         localStorage.setItem('localActiveTabs', JSON.stringify(localActiveTabs));
     }, [localActiveTabs]);
@@ -194,13 +190,11 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
         <div className="data-view-container">
             <div className="toggle-view-icons">
                 <div className="icon-container">
-                    <div className={`icon`} onClick={() => handleViewToggle('grid')} style={{ display: isListView ? 'block' : 'none' }}>
+                    <div className={`icon ${isListView ? 'icon-visible' : 'icon-hidden'}`} onClick={() => handleViewToggle('grid')}>
                         <FontAwesomeIcon icon={faThLarge} />
                         <span className="tooltip-text">Visualização em Grade</span>
                     </div>
-                </div>
-                <div className="icon-container">
-                    <div className={`icon`} onClick={() => handleViewToggle('list')} style={{ display: isListView ? 'none' : 'block' }}>
+                    <div className={`icon ${!isListView ? 'icon-visible' : 'icon-hidden'}`} onClick={() => handleViewToggle('list')}>
                         <FontAwesomeIcon icon={faBars} />
                         <span className="tooltip-text">Visualização em Lista</span>
                     </div>
