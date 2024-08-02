@@ -165,26 +165,56 @@
 .toggle-view-icons {
     display: flex;
     justify-content: flex-end;
-    margin-top: -27px;
-    margin-bottom: 50px;
-    gap: 20px; /* Espaçamento entre os ícones */
+    margin-bottom: 10px;
+    gap: 0; /* Remover o espaço entre os ícones */
+    position: relative; /* Para posicionamento absoluto dos ícones */
 }
 
 .icon-container {
     position: relative;
+    margin-right: 20px; /* Espaço entre os ícones e outros elementos */
     cursor: pointer;
+    width: 24px; /* Largura fixa para os ícones */
+    height: 24px; /* Altura fixa para os ícones */
 }
 
 .icon {
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    transition: color 0.3s;
+    font-size: 24px;
+    color: #007bff;
+    position: absolute; /* Posicionamento absoluto dentro do container */
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.icon-container .icon-hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.icon-container .icon-visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Tooltip para ícones */
 .data-view-container .icon-container .tooltip-text {
     visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 110%; /* Posição abaixo do ícone */
+    left: 50%;
     transform: translateX(-90%);
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    white-space: nowrap;
+    font-size: 1.3rem;
 }
 
 .icon-container:hover .tooltip-text {
@@ -202,6 +232,7 @@
     border-style: solid;
     border-color: transparent transparent #333 transparent;
 }
+
 
 /* Grid de detalhes */
 .details-grid {
