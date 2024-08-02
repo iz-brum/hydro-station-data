@@ -22,23 +22,31 @@ const HomePage = () => {
         <section className="home-section">
           <h3>Sobre o Aplicativo</h3>
           <p>
-            O aplicativo HidroWeb mobile é uma ferramenta integrante do Sistema Nacional de Informações sobre Recursos Hídricos (SNIRH), gerenciado pela Agência Nacional de Águas (ANA), e permite o acesso aos dados telemétricos coletados pela Rede Hidrometeorológica Nacional (RHN)...
+            Bem-vindo ao HidroInfo, uma plataforma avançada para acesso a dados hidrológicos e meteorológicos em tempo real. Desenvolvido pela Agência Nacional de Águas (ANA), nosso aplicativo é parte integrante do Sistema Nacional de Informações sobre Recursos Hídricos (SNIRH), permitindo a visualização dos dados coletados pela Rede Hidrometeorológica Nacional (RHN). Através do HidroInfo, você pode monitorar e analisar informações essenciais sobre o clima e os recursos hídricos do Brasil.
           </p>
         </section>
         <section className="home-section">
           <h3>Funcionalidades</h3>
           <ul>
-            <li>Acesso a dados de estações meteorológicas em tempo real.</li>
-            <li>Visualização de históricos de níveis de água e vazões.</li>
-            <li>Alertas para eventos hidrológicos críticos.</li>
-            <li>Mapas interativos para localização das estações.</li>
+            <li>Consulta a dados detalhados de estações hidrometeorológicas em todo o país.</li>
+            <li>Visualização de históricos de chuvas, níveis de água e vazões com gráficos interativos.</li>
+            <li>Filtragem personalizada para criar relatórios e visualizações específicas de acordo com suas necessidades.</li>
+            <li>Acesso a informações geográficas e dados estatísticos das estações monitoradas.</li>
           </ul>
         </section>
         <section className="home-section flex-section">
           <div className="text-content">
             <h3>Como Utilizar</h3>
             <p>
-              Navegue pelo aplicativo para explorar as diferentes funcionalidades oferecidas. Utilize o menu principal para acessar seções específicas como "Estatísticas", "Alertas", "Mapas" e muito mais.
+              Navegar pelo HidroInfo é simples e intuitivo. Utilize o menu superior para acessar as principais funcionalidades:
+            </p>
+            <ul>
+              <li><strong>Pesquisar Estações:</strong> Encontre e selecione estações específicas para visualizar seus dados detalhados.</li>
+              <li><strong>Dados Hidrométricos 24h:</strong> Acesse gráficos com dados de chuvas, níveis de água e vazões nas últimas 24 horas.</li>
+              <li><strong>Resumo de Chuva:</strong> Veja resumos de precipitação acumulada em diferentes períodos, como 24 horas, 7 dias, 30 dias e 12 meses.</li>
+            </ul>
+            <p>
+              Explore esta e outras funcionalidades (em breve) para obter insights valiosos sobre as condições hidrológicas e meteorológicas. Para mais informações, visite o site oficial do SNIRH.
             </p>
             <a href="https://www.snirh.gov.br" target="_blank" rel="noopener noreferrer" className="cta-button">Saiba mais</a>
           </div>
