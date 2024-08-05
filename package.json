@@ -39,6 +39,7 @@
     "react-scripts": "^3.0.1",
     "react-virtuoso": "^4.7.13",
     "recharts": "^2.12.7",
+    "shepherd.js": "^13.0.1",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "url": "^0.11.3",
