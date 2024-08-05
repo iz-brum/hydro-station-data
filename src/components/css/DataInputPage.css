@@ -2,15 +2,17 @@
 
 /* Estilos para o container */
 .container {
-    padding: 2rem;
+    padding: 2.5rem;
     background-color: var(--background-color);
     margin: 2rem auto;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    max-width: 100%; /* Use 100% para evitar rolagem horizontal */
+    max-width: 100%;
+    /* Use 100% para evitar rolagem horizontal */
     width: 88%;
     color: var(--text-color);
-    overflow-x: hidden; /* Previne rolagem horizontal */
+    overflow-x: hidden;
+    /* Previne rolagem horizontal */
 }
 
 /* Estilos para o título */
@@ -67,7 +69,8 @@ button:hover {
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
-    width: 100%; /* Garante que os filtros não excedam a largura do contêiner */
+    width: 100%;
+    /* Garante que os filtros não excedam a largura do contêiner */
 }
 
 /* Estilos para os filtros */
@@ -75,7 +78,7 @@ button:hover {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
-    margin: 10px 0;
+    margin: 10px 0 0;
     overflow-x: auto;
     padding-bottom: 10px;
     scrollbar-width: thin;
@@ -101,7 +104,7 @@ button:hover {
     cursor: pointer;
     color: var(--text-color-alt);
     font-size: 1.3rem;
-    margin-bottom: 10px;
+    margin: 3px 0 10px;
     width: max-content;
 }
 
@@ -181,7 +184,8 @@ label:hover {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    flex-wrap: wrap; /* Envolver ícones para evitar rolagem horizontal */
+    flex-wrap: wrap;
+    /* Envolver ícones para evitar rolagem horizontal */
 }
 
 .icon-container {
@@ -210,7 +214,8 @@ label:hover {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    top: 110%; /* Posição abaixo do ícone */
+    top: 110%;
+    /* Posição abaixo do ícone */
     left: 5%;
     transform: translateX(-5%);
     opacity: 0;
@@ -247,25 +252,31 @@ label:hover {
         font-size: 12px;
     }
 
-    .category h3, .category .select-buttons button {
-        font-size: 0.9rem; /* Reduzir tamanho da fonte */
+    .category h3,
+    .category .select-buttons button {
+        font-size: 0.9rem;
+        /* Reduzir tamanho da fonte */
     }
 }
 
 @media (max-width: 576px) {
     .icon-container {
-        margin-right: 10px; /* Reduzir o espaçamento entre ícones */
+        margin-right: 10px;
+        /* Reduzir o espaçamento entre ícones */
     }
 
     .icon {
         font-size: 18px;
     }
 
-    .category h3, .category .select-buttons button {
-        font-size: 0.8rem; /* Reduzir tamanho da fonte */
+    .category h3,
+    .category .select-buttons button {
+        font-size: 0.8rem;
+        /* Reduzir tamanho da fonte */
     }
 
     .filters {
-        grid-template-columns: repeat(2, 1fr); /* Ajustar layout dos filtros */
+        grid-template-columns: repeat(2, 1fr);
+        /* Ajustar layout dos filtros */
     }
 }
