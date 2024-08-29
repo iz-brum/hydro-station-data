@@ -101,6 +101,7 @@ body {
 }
 
 .home-gif-container {
+    position: relative;
     flex: 1;
     text-align: center;
     display: flex;
@@ -113,6 +114,17 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 25px;
+}
+
+.home-gif-credit {
+    position: absolute;
+    bottom: 10px; /* Distância do texto em relação ao fundo da imagem */
+    right: 10px; /* Distância do texto em relação à lateral direita da imagem */
+    color: #ffffff; /* Cor do texto para garantir visibilidade sobre a imagem */
+    font-size: 0.8rem; /* Tamanho da fonte */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para melhor contraste */
+    padding: 2px 5px; /* Espaçamento interno do texto */
+    border-radius: 3px; /* Arredondamento das bordas do fundo */
 }
 
 /* Botão de Chamada para Ação */

@@ -34,6 +34,10 @@ const HomePage = () => {
             <li>Acesso a informações geográficas e dados estatísticos das estações monitoradas.</li>
           </ul>
         </section>
+        <div className="home-gif-container">
+          <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHNpcDM4cWNwZ28zeGZjcTIxMDZtNjI5ODhneGRpcGN6aXdqbW5lZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPEqDGUULpEU0aQ/giphy.webp" alt="Descrição do GIF" className="home-gif" />
+          <p className="home-gif-credit"><a href="https://giphy.com/gifs/cartoon-character-2d-3oKIPEqDGUULpEU0aQ" target="_blank" rel="noopener noreferrer">via GIPHY</a></p>
+        </div>
         <section className="home-section flex-section">
           <div className="text-content">
             <h3>Como Utilizar</h3>
@@ -49,10 +53,6 @@ const HomePage = () => {
               Explore esta e outras funcionalidades (em breve) para obter insights valiosos sobre as condições hidrológicas e meteorológicas. Para mais informações, visite o site oficial do SNIRH.
             </p>
             <a href="https://www.snirh.gov.br" target="_blank" rel="noopener noreferrer" className="cta-button">Saiba mais</a>
-          </div>
-          <div className="home-gif-container">
-            <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHNpcDM4cWNwZ28zeGZjcTIxMDZtNjI5ODhneGRpcGN6aXdqbW5lZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPEqDGUULpEU0aQ/giphy.webp" alt="Descrição do GIF" className="home-gif" />
-            <p className="home-gif-credit"><a href="https://giphy.com/gifs/cartoon-character-2d-3oKIPEqDGUULpEU0aQ" target="_blank" rel="noopener noreferrer">via GIPHY</a></p>
           </div>
         </section>
       </main>
