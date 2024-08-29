@@ -1,7 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { fetchStationDetails, fetchHydro24h, fetchRainSummary } from '../api/apiService';
 import DataView from './DataView';
 import './css/DataInputPage.css';
+import { startDataInputPageTour } from './tourDataInputPage'; // Importe o tour
 import Popup from './Popup';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -10,10 +11,6 @@ import { useLoading } from '../context/LoadingContext';
 import PreviewModal from './PreviewModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faEye, faFileDownload } from '@fortawesome/free-solid-svg-icons';
-
-import './css/FirstVisitGuide.css'
-import Shepherd from 'shepherd.js';
-import 'shepherd.js/dist/css/shepherd.css';
 
 const DataInputPage = () => {
   const { setLoading } = useLoading();
@@ -63,6 +60,10 @@ const DataInputPage = () => {
 
   // Memoized data for caching
   const memoizedData = {};
+
+  useEffect(() => {
+    startDataInputPageTour(); // Inicie o tour quando o componente for montado
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -432,134 +433,6 @@ const DataInputPage = () => {
       setShowRainSummary(prev => !prev);
     } else if (category === 'hidro_24h') {
       setShowHydro24h(prev => !prev);
-    }
-  };
-
-  const tour = useMemo(() => {
-    const tourInstance = new Shepherd.Tour({
-      useModalOverlay: true,
-      defaultStepOptions: {
-        scrollTo: { behavior: 'smooth', block: 'center' },
-        classes: 'shepherd-element',
-        cancelIcon: {
-          enabled: true
-        },
-        arrow: true,
-        buttons: [
-          {
-            text: 'Voltar',
-            action: () => tourInstance.back(),
-            classes: 'shepherd-button shepherd-button-secondary'
-          },
-          {
-            text: 'Próximo',
-            action: () => tourInstance.next(),
-            classes: 'shepherd-button shepherd-button-primary'
-          }
-        ],
-        when: {
-          show: () => {
-            document.querySelector('.shepherd-element').style.transition = 'all 0.7s ease-in-out'; // Ajuste a velocidade de transição
-          }
-        }
-      }
-    });
-
-    const steps = [
-      {
-        id: 'ficha',
-        text: 'Aqui você pode selecionar os filtros para os dados exibidos na Ficha da estação.',
-        attachTo: { element: '#ficha', on: 'bottom' },
-
-        when: {
-          show: () => highlightElement('#ficha'),
-          hide: () => removeHighlight('#ficha')
-        }
-      },
-      {
-        id: 'resumo',
-        text: 'Aqui você pode selecionar os filtros para os dados exibidos no Resumo de Chuva.',
-        attachTo: { element: '#resumo', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#resumo'),
-          hide: () => removeHighlight('#resumo')
-        }
-      },
-      {
-        id: 'hidro24h',
-        text: 'Aqui você pode selecionar os filtros para os dados exibidos nos Dados Hidrométricos 24h.',
-        attachTo: { element: '#hidro24h', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#hidro24h'),
-          hide: () => removeHighlight('#hidro24h')
-        }
-      },
-      {
-        id: 'list-stations',
-        text: 'Digite os códigos das estações separados por vírgulas.',
-        attachTo: { element: '#list-stations', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#list-stations'),
-          hide: () => removeHighlight('#list-stations')
-        }
-      },
-      {
-        id: 'faSearch',
-        text: 'Clique aqui para buscar e exibir os dados.',
-        attachTo: { element: '#faSearch', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#faSearch'),
-          hide: () => removeHighlight('#faSearch')
-        }
-      },
-      {
-        id: 'faEye',
-        text: 'Clique aqui para revisar os dados antes do download.',
-        attachTo: { element: '#faEye', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#faEye'),
-          hide: () => removeHighlight('#faEye')
-        }
-      },
-      {
-        id: 'faFileDownload',
-        text: 'Clique aqui para confirmar e baixar os dados em XLSX.',
-        attachTo: { element: '#faFileDownload', on: 'bottom' },
-        when: {
-          show: () => highlightElement('#faFileDownload'),
-          hide: () => removeHighlight('#faFileDownload')
-        }
-      }
-    ];
-
-    steps.forEach(step => tourInstance.addStep(step));
-
-    // Remove highlights when the tour ends or is canceled
-    const removeAllHighlights = () => {
-      steps.forEach(step => removeHighlight(step.attachTo.element));
-    };
-
-    tourInstance.on('complete', removeAllHighlights);
-    tourInstance.on('cancel', removeAllHighlights);
-
-    return tourInstance;
-  }, []);
-
-  useEffect(() => {
-    tour.start();
-  }, [tour]);
-
-  const highlightElement = (selector) => {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.classList.add('shepherd-target-highlight');
-    }
-  };
-
-  const removeHighlight = (selector) => {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.classList.remove('shepherd-target-highlight');
     }
   };
 
