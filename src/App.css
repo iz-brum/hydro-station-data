@@ -50,6 +50,14 @@ a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  /* Permite que os itens se organizem em múltiplas linhas em telas menores */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  /* Garante que a navbar fique sobre outros elementos da página */
 }
 
 .nav-list {
@@ -58,6 +66,10 @@ a:hover {
   padding: 0;
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
+  /* Permite que os itens se organizem em múltiplas linhas em telas menores */
+  justify-content: center;
+  /* Centraliza os itens no contêiner */
 }
 
 .nav-item {
@@ -71,6 +83,8 @@ a:hover {
   position: relative;
   font-size: 1.2rem;
   transition: color 0.3s ease;
+  white-space: nowrap;
+  /* Evita quebra de linha no texto dos links */
 }
 
 .nav-link::after {
@@ -98,3 +112,22 @@ a:hover {
 .nav-link.active {
   color: var(--secondary-color);
 }
+
+/* Ajustes para dispositivos menores */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    /* Empilha os itens verticalmente em telas menores */
+    gap: 1rem;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+}
+
