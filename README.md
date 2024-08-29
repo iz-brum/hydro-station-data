@@ -102,20 +102,3 @@ Este projeto é licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE)
 
 *Este projeto não é afiliado oficialmente com o aplicativo HydroWeb Mobile ou com a Agência Nacional de Águas (ANA). Ele utiliza dados públicos para fins informativos e educacionais.*
 
-
----
-
-## 🚀 Contribuidores
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/iz-brum">
-        <img src="https://avatars.githubusercontent.com/u/142345565?s=48&v=4" width="100px;" alt="IZANN BRUM"/><br />
-        <sub><b>IZANN BRUM</b></sub>
-      </a>
-    </td>
-  </tr>
-</table>
-
----
