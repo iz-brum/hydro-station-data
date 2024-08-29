@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import 'shepherd.js/dist/css/shepherd.css';
 import './css/DataView.css';
+import { startDataViewTour } from './tourDataView'; // Importe o tour
 import { detailLabels, formatNumber, formatDate, rainSummaryLabels, getDomain } from '../utils/utils';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,9 +16,13 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
     const initialLocalActiveTabs = JSON.parse(localStorage.getItem('localActiveTabs')) || {};
 
     const [isGlobalControlActive, setIsGlobalControlActive] = useState(initialGlobalControl);
-    const [globalActiveTab, setGlobalActiveTab] = useState(null);
+    const [globalActiveTab, setGlobalActiveTab] = useState('chuva');
     const [localActiveTabs, setLocalActiveTabs] = useState(initialLocalActiveTabs);
     const [isListView, setIsListView] = useState(initialListView);
+    
+    useEffect(() => {
+        startDataViewTour(); // Inicie o tour quando o componente for montado
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('isListView', isListView);
@@ -200,7 +206,7 @@ const DataView = React.memo(({ data, selectedDetails, selectedRainSummary, selec
                     </div>
                 </div>
                 <div className="icon-container">
-                    <div className={`icon`} onClick={toggleGlobalControl}>
+                    <div className={`icon`} onClick={toggleGlobalControl} id='grafico_control'>
                         <FontAwesomeIcon icon={faSlidersH} />
                         <span className="tooltip-text">{isGlobalControlActive ? 'Ativar Controle Indiviual De Gráficos' : 'Desativar Controle Indiviual De Gráficos'}</span>
                     </div>
