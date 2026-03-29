@@ -36,7 +36,7 @@
     "react-leaflet": "^4.2.1",
     "react-leaflet-markercluster": "^3.0.0-rc1",
     "react-router-dom": "^6.25.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "5.0.1",
     "react-virtuoso": "^4.7.13",
     "recharts": "^2.12.7",
     "shepherd.js": "^13.0.1",
