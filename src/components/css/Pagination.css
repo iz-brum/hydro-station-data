@@ -1,0 +1,38 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: #007bff;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .pagination-button:disabled {
+    color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  .pagination-number {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: #007bff;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
+  
+  .pagination-number.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .pagination-dots {
+    padding: 0 8px;
+  }
+  

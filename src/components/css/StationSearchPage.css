@@ -1,0 +1,101 @@
+/* Estilo do Campo de Pesquisa */
+/* Contêiner para o input e o ícone */
+.station-search-input-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0px 0px 15px 20px;
+}
+
+/* Estilo do campo de pesquisa */
+.station-search-input {
+  width: 100%;
+  padding: 10px 0px 10px 15px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+/* Estilo do ícone */
+.station-search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+/* Estilo da Grade de Itens */
+.station-search-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.station-search-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.station-search-card:hover {
+  transform: translateY(-5px);
+}
+
+.station-search-card h4 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.station-search-card p {
+  margin: 5px 0;
+  color: #555;
+}
+
+/* Estilo do Botão */
+.station-search-load-more-button {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 30px auto;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.station-search-load-more-button:hover {
+  background-color: #0056b3;
+}
+
+.station-pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adiciona uma margem superior */
+  margin-bottom: 40px; /* Adiciona uma margem inferior */
+}
+
+.pagination-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-button.active {
+  background-color: #0056b3;
+  font-weight: bold;
+}
