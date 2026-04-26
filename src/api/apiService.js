@@ -30,3 +30,24 @@ export const fetchRainSummary = (code) => {
       throw error; // Re-throw para que o chamador lide com o erro
     });
 };
+
+// Função para buscar estações com ou sem query
+export const fetchStations = async (offset = 0, limit = 25) => {
+  return axios.get(`${API_BASE_URL}estacao`, {
+    params: { offset, limit }
+  }).catch(error => {
+    console.error('Erro ao buscar estações:', error);
+    throw error;
+  });
+};
+
+
+// Função para buscar estações globalmente com base no nome ou código
+export const searchStations = async (query) => {
+  return axios.get(`${API_BASE_URL}/estacao/`, {
+    params: { nome_ou_codigo: query } // Substitua 'nome_ou_codigo' pelo nome real do parâmetro esperado pela API
+  }).catch(error => {
+    console.error('Erro ao buscar estações:', error);
+    throw error;
+  });
+};

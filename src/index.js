@@ -1,13 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import ReactDOM from 'react-dom';
 import './index.css';
-import './styles.css'; // Importe o arquivo CSS
+import App from './App';
+import { UNSAFE_logV6DeprecationWarnings } from 'react-router-dom';
 
-// Renderiza o aplicativo no elemento root do HTML
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+UNSAFE_logV6DeprecationWarnings({
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+});
+
+ReactDOM.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
