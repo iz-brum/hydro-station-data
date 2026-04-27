@@ -17,34 +17,34 @@ const parallelRequests = 10;
 
 const App = () => {
 
-  // Função para carregar e armazenar as estações no cache em segundo plano
-  const loadAndCacheStations = async () => {
-    let allStations = [];
-    const startTime = performance.now(); 
+  useEffect(() => {
+    // Função para carregar e armazenar as estações no cache em segundo plano
+    const loadAndCacheStations = async () => {
+      let allStations = [];
+      const startTime = performance.now();
 
-    for (let i = 0; i < totalPages; i += parallelRequests) {
-      const promises = [];
-      for (let j = 0; j < parallelRequests && i + j < totalPages; j++) {
-        promises.push(fetchStations((i + j) * pageSize, pageSize));
+      for (let i = 0; i < totalPages; i += parallelRequests) {
+        const promises = [];
+        for (let j = 0; j < parallelRequests && i + j < totalPages; j++) {
+          promises.push(fetchStations((i + j) * pageSize, pageSize));
+        }
+
+        const results = await Promise.all(promises);
+        for (let index = 0; index < results.length; index++) {
+          const response = results[index];
+          const currentStations = response.data.items || [];
+          allStations = allStations.concat(currentStations);
+          // Aqui você pode salvar as estações no cache global ou localStorage
+          console.log(`Página ${i + index + 1} carregada e salva no cache:`, currentStations.length, 'estações');
+        }
       }
 
-      const results = await Promise.all(promises);
-      results.forEach((response, index) => {
-        const currentStations = response.data.items || [];
-        allStations = allStations.concat(currentStations);
+      const endTime = performance.now();
+      const totalTime = (endTime - startTime) / 1000;
+      console.log('Todas as estações foram carregadas no cache:', allStations.length);
+      console.log(`Tempo total para carregar e armazenar todas as estações no cache: ${totalTime.toFixed(2)} segundos`);
+    };
 
-        // Aqui você pode salvar as estações no cache global ou localStorage
-        console.log(`Página ${i + index + 1} carregada e salva no cache:`, currentStations.length, 'estações');
-      });
-    }
-
-    const endTime = performance.now(); 
-    const totalTime = (endTime - startTime) / 1000; 
-    console.log('Todas as estações foram carregadas no cache:', allStations.length);
-    console.log(`Tempo total para carregar e armazenar todas as estações no cache: ${totalTime.toFixed(2)} segundos`);
-  };
-
-  useEffect(() => {
     loadAndCacheStations(); // Inicia o cache ao carregar o aplicativo
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchStations } from '../api/apiService';
 import './css/StationSearchPage.css';
 import Loading from './Loading/Loading';
@@ -7,7 +7,7 @@ import { useLoading } from '../context/LoadingContext';
 const StationSearchPage = () => {
   const { loading, setLoading } = useLoading();
   const [stations, setStations] = useState([]);
-  const [cachedStations, setCachedStations] = useState([]);
+  const [cachedStations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(
     () => Number(localStorage.getItem('currentPage')) || 0
@@ -17,7 +17,7 @@ const StationSearchPage = () => {
   const totalPages = Math.ceil(totalStations / pageSize);
   const maxPagesToShow = 5;
 
-  const loadStations = async (newPage) => {
+  const loadStations = useCallback(async (newPage) => {
     if (cachedStations.length > 0) {
       const startIndex = newPage * pageSize;
       const paginatedStations = cachedStations.slice(startIndex, startIndex + pageSize);
@@ -30,7 +30,7 @@ const StationSearchPage = () => {
       try {
         const response = await fetchStations(newPage * pageSize, pageSize);
         setStations(response.data.items || []);
-        console.log(`Exibindo estações da página ${newPage + 1} (sem cache):`, response.data.items.length, 'estações');
+        console.log(`Exibindo estações da página ${newPage + 1} (sem cache):`, (response.data.items || []).length, 'estações');
         setPage(newPage);
         localStorage.setItem('currentPage', newPage);
       } catch (error) {
@@ -39,11 +39,11 @@ const StationSearchPage = () => {
         setLoading(false);
       }
     }
-  };
+  }, [cachedStations, setLoading]);
 
   useEffect(() => {
     loadStations(page);
-  }, []);
+  }, [loadStations, page]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -60,7 +60,7 @@ const StationSearchPage = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, page]);
+  }, [searchQuery, page, cachedStations, loadStations]);
 
   const handlePageClick = (pageIndex) => {
     if (pageIndex !== page && pageIndex >= 0 && pageIndex < totalPages) {
